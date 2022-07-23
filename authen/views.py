@@ -22,7 +22,7 @@ def login(request):
         if user:
             serializer = LoginSerializer(user)
             data = serializer.data
-            status_code = status.HTTP_200_OK
+            status_code = status.HTTP_201_CREATED
             message = "Sucessfully"
         else:
             status_code = status.HTTP_400_BAD_REQUEST
