@@ -37,4 +37,4 @@ def login(request):
         "errors": errors,
         "data": data
     }
-    return Response(res_dict, status= status_code)
+    return Response(res_dict, status=status_code)
