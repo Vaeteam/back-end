@@ -3,9 +3,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import LoginSerializer
 from rest_framework import status
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 
 
 # TODO login
+
+@extend_schema(
+    request=LoginSerializer,
+)
 @api_view(['POST'])
 def login(request):
     func_name = "login user"
