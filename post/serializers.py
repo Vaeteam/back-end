@@ -1,7 +1,7 @@
 from post.models import Post, RangeTime, Subject
 from rest_framework import serializers
 from constant.choice import DAY
-from .services import is_null_or_empty, add_query
+from .services import is_null_or_empty
 from django.db.models import Q
 import datetime
 
@@ -123,15 +123,18 @@ class PostSerializers(serializers.ModelSerializer):
         # filter
         query = ""
         if not is_null_or_empty(subjects):
-            query += add_query(query, Q(subjects in subjects))
+            query = Q(subjects in subjects)
         if not is_null_or_empty(rangetimes):
-            condition = ""
+            condition_rangetime = ""
             for rangetime in rangetimes:
                 day = rangetime.get("day")
                 time_begin = rangetime.get("time_begin")
                 time_end = rangetime.get("time_end")
-
-                condition = condition + Q()
+                condition_rangetime = Q(day=day) & Q(time_begin__gte=time_begin) & Q(time_end__lte=time_end)
+                if is_null_or_empty(condition_rangetime):
+                    pass
+                else:
+                    condition_rangetime = condition_rangetime + Q()
 
         query = Q(firstname='Emil') | Q(firstname='Tobias')
         filter(query)

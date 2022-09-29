@@ -17,12 +17,3 @@ def is_null_or_empty(_str):
         return True
     return False
 
-def add_query(query, condition, is_and = True):
-    if is_null_or_empty(query):
-        if is_and:
-            query = & condition
-        else:
-            query = | condition
-    else:
-        query = condition
-    return query
