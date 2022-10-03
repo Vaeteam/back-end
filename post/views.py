@@ -7,24 +7,23 @@ from rest_framework import status
 
 @api_view(['GET'])
 def get_posts(request):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    message = "Internal server error"
+    errors = None
+    data = None
+    try:
+        postSerializers = PostSerializers(instance=None, data=request.data)
+        querySet = postSerializers.get_posts_filter(request.data)
+        serializers = PostSerializers(querySet, many=True)
+        message = "Successfully"
+        status_code = status.HTTP_200_OK
+        data = serializers.data
+    except Exception as ex:
+        print("log here ", ex)
+    res_dict = {
+        "message": message,
+        "errors": errors,
+        "data": data
+    }
+    return Response(res_dict, status=status_code)
 
-    
-    # validate data input
-    # if postSerializers.is_valid(raise_exception=True):
-    #     return Response("not ok")
-
-    
-    postSerializers = PostSerializers(instance=None, data=request.data)
-    querySet = postSerializers.get_posts_filter(request.data)
-    serializers = PostSerializers(querySet, many=True) 
-    # print("obj: ", data)
-    return Response(serializers.data)
-    # posts = service_get_posts(
-    #     subjects, rangetimes, fromfee, tofee, commonrangetimes, address)
-
-    # paginator = CustomPropertyPagination()
-    # posts = paginator.paginate_queryset(posts, request)
-    # serializers = PostSerializers(posts, many=True)
-    #
-    # return Response(format_response(status_code=status.STATUS_CODE["success"], message=status.MESSAGE['success'],
-    #                                 data=paginator.get_paginated_response(serializers.data)))
