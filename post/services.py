@@ -1,11 +1,6 @@
 from django.db.models import Q
 
 
-def is_empty(_str):
-    if isinstance(_str, str):
-        return is_none(_str) or len(_str.strip()) == 0
-    return False
-
 def is_null_or_empty(_str):
     if _str is None:
         return True
@@ -17,3 +12,8 @@ def is_null_or_empty(_str):
         return True
     return False
 
+def is_null_or_empty_params(*args):
+    for arg in args:
+        if is_null_or_empty(arg):
+            return True
+    return False

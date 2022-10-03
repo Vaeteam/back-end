@@ -1,8 +1,11 @@
+from curses import keyname
 from post.models import Post, RangeTime, Subject
 from rest_framework import serializers
 from constant.choice import DAY
-from .services import is_null_or_empty
+from constant import status
+from .services import is_null_or_empty, is_null_or_empty_params
 from django.db.models import Q
+
 import datetime
 
 
@@ -43,7 +46,6 @@ class PostSerializers(serializers.ModelSerializer):
         except:
             raise serializers.ValidationError(
                 'field fee must be integer / tiền phí phải là số', status.STATUS_CODE['invalid_data'])
-
         return fee
 
     def validate_duration(self, duration):
@@ -85,6 +87,11 @@ class PostSerializers(serializers.ModelSerializer):
                     day = range_time['day']
                     time_begin = range_time['time_begin']
                     time_end = range_time['time_end']
+
+                    time_begin = datetime.datetime.strptime(f"27/10/2000 {time_begin}", "%d/%m/%Y %H:%M:%S").time()
+                    time_end = datetime.datetime.strptime(f"27/10/2000 {time_end}", "%d/%m/%Y %H:%M:%S").time()
+
+
                     if day not in DAY:
                         raise serializers.ValidationError(
                             'teaching day invalid / ngày dạy không hợp lệ', status.STATUS_CODE['invalid_data'])
@@ -95,6 +102,7 @@ class PostSerializers(serializers.ModelSerializer):
                         raise serializers.ValidationError(
                             'time invalid / thời gian dạy không hợp lệ', status.STATUS_CODE['invalid_data'])
                 except Exception as e:
+                    print("exception: ", e)
                     raise serializers.ValidationError(
                         'time invalid / thời gian dạy không hợp lệ', status.STATUS_CODE['invalid_data'])
             return multi_range_time
@@ -102,7 +110,6 @@ class PostSerializers(serializers.ModelSerializer):
             'time invalid / thời gian dạy không hợp lệ', status.STATUS_CODE['invalid_data'])
 
     def validate(self, data):
-
         user = self.context['user']
         account_type = user.account_type
         if 'teacher' not in account_type:
@@ -111,31 +118,42 @@ class PostSerializers(serializers.ModelSerializer):
         return data
 
     def get_posts_filter(self, data):
-
-        subjects = data.get('subject', [])
-        rangetimes = data.get('range_time', [])
-        fee = data.get("fee")
+        keyword = data.get("keyword", "") # title, subjects, address, author_name
+        range_times = data.get('range_times', [])
+        fee = data.get("fee", {})
+        from_fee = fee.get("from_fee")
+        to_fee = fee.get("to_fee")
         common_range_times = data.get('common_range_times', [])
-        address = data.get('address')
-        print(subjects, rangetimes, fee, common_range_times, address)
-        # validate
-
+        
         # filter
         query = ""
-        if not is_null_or_empty(subjects):
-            query = Q(subjects in subjects)
-        if not is_null_or_empty(rangetimes):
-            condition_rangetime = ""
-            for rangetime in rangetimes:
-                day = rangetime.get("day")
-                time_begin = rangetime.get("time_begin")
-                time_end = rangetime.get("time_end")
-                condition_rangetime = Q(day=day) & Q(time_begin__gte=time_begin) & Q(time_end__lte=time_end)
-                if is_null_or_empty(condition_rangetime):
-                    pass
-                else:
-                    condition_rangetime = condition_rangetime + Q()
+        is_add = False
+        if not is_null_or_empty(keyword):
+            query = Q(title__contains = keyword) | Q(subjects__name__contains = keyword) | Q(address__contains = keyword) | Q(author__first_name = keyword) | Q(author__last_name = keyword)
+            is_add = True 
+        
+        if not is_null_or_empty_params(from_fee, to_fee):
+            sub_query = Q(fee__gte = from_fee) & Q(fee__lte = to_fee)
+            if is_add:
+                query = query & sub_query
+            else:
+                query = sub_query
+        
+        if len(range_times) != 0:
+            range_times = self.validate_range_time(range_times)
+            rangetimes_id = Post.get_post_range_time_id(range_times)
 
-        query = Q(firstname='Emil') | Q(firstname='Tobias')
-        filter(query)
+            sub_query = Q(id__in = rangetimes_id)
+            if is_add:
+                query = query & sub_query
+            else:
+                query = sub_query
+        
+        if len(common_range_times) != 0:
+            pass
+
+        if query != "":
+            data = Post.objects.filter(query)
+        else:
+            data = Post.objects.all()
         return data

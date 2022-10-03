@@ -57,6 +57,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+    @property
+    def fullname(self):
+        return self.last_name + self.first_name
 
     @property
     def access_token(self):

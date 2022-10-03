@@ -8,15 +8,17 @@ from rest_framework import status
 @api_view(['GET'])
 def get_posts(request):
 
-    postSerializers = PostSerializers(instance=None, data=request.data)
+    
     # validate data input
     # if postSerializers.is_valid(raise_exception=True):
     #     return Response("not ok")
 
-    data = postSerializers.get_posts_filter(request.data)
-
-    print("obj: ", data)
-    return Response("ok")
+    
+    postSerializers = PostSerializers(instance=None, data=request.data)
+    querySet = postSerializers.get_posts_filter(request.data)
+    serializers = PostSerializers(querySet, many=True) 
+    # print("obj: ", data)
+    return Response(serializers.data)
     # posts = service_get_posts(
     #     subjects, rangetimes, fromfee, tofee, commonrangetimes, address)
 

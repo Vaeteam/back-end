@@ -40,7 +40,7 @@ class Post(models.Model):
         CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name="approve_user")
 
     class Meta:
-        ordering = ('-date_posted',)
+        ordering = ('-id',)
         indexes = [
             BTreeIndex(fields=['title', ]),
             BTreeIndex(fields=['fee', ]),
@@ -60,71 +60,52 @@ class Post(models.Model):
     @staticmethod
     def get_post_range_time_id(rangetimes):
         ids = []
-        for rangetime in rangetimes:
-            day, begin_time, end_time = rangetime.split("and")
-            rangetime_list = RangeTime.objects.filter(
-                Q(day=day) & Q(time_begin=begin_time) & Q(time_end=end_time))
+        try:
+            for i, rangetime in enumerate(rangetimes):
+                day, time_begin, time_end = rangetime.get("day"), rangetime.get("time_begin"), rangetime.get("time_end")
+                
+                time_begin = datetime.datetime.strptime(time_begin, "%H:%M:%S").time()
+                time_end = datetime.datetime.strptime(time_end, "%H:%M:%S").time()
+
+                if i == 0:
+                    query = (Q(day=day) & Q(time_begin__lte=time_begin) & Q(time_end__gte=time_end))
+                else:
+                    query = query | (Q(day=day) & Q(time_begin__lte=time_begin) & Q(time_end__gte=time_end))
+            query = Q(post__active = True) & (query) 
+            rangetime_list = RangeTime.objects.filter(query)
             for rangetime in rangetime_list:
                 ids.append(rangetime.post.id)
+        except Exception as ex:
+            print("Error get_post_range_time_id: ", ex)
         return ids
 
-    @staticmethod
-    def get_range_time_filter(all_posts, rangetimes):
-        if rangetimes == []:
-            return all_posts
-        else:
-            ids = Post.get_post_range_time_id(rangetimes)
-            all_posts = all_posts.filter(id__in=ids).distinct()
-            return all_posts
 
     @staticmethod
-    def get_fee_filter(all_posts, fromfee, tofee):
-        try:
-            fromfee = int(fromfee)
-            tofee = int(tofee)
-            all_posts = all_posts.filter(
-                Q(fee__gte=fromfee) & Q(fee__lte=tofee)).distinct()
-            return all_posts
-        except:
-            return all_posts
-
-    @staticmethod
-    def get_post_common_range_time_id(commonrangetimes):
+    def get_post_common_range_time_id(common_range_times):
         ids = []
-        for commonrangetime in commonrangetimes:
-            if commonrangetime in COMMON:
-                session, day = commonrangetime.split(" ", 1)
-                if session == 'Sáng':
+        try:
+            query = ""
+            flag = True 
+            for i, common_range_time in enumerate(common_range_times):
+                day = common_range_time.get("day")
+                session = common_range_time.get("session", "").lower()
+
+                if session == 'sáng':
                     begin = datetime.datetime.strptime('6:50', '%H:%M').time()
                     end = datetime.datetime.strptime('11:59', '%H:%M').time()
-                    rangetime_list = RangeTime.objects.filter(
-                        Q(day=day) & Q(time_begin__gte=begin) & Q(time_end__lte=end))
-                elif session == "Chiều":
+                elif session == "chiều":
                     begin = datetime.datetime.strptime('12:01', '%H:%M').time()
                     end = datetime.datetime.strptime('23:59', '%H:%M').time()
-                    rangetime_list = RangeTime.objects.filter(
-                        Q(day=day) & Q(time_begin__gte=begin) & Q(time_end__lte=end))
-                for rangetime in rangetime_list:
-                    ids.append(rangetime.post.id)
+                if i == 0:
+                    query = (Q(time_begin__gte=begin) & Q(time_end__lte=end) & Q(day=day)) 
+                else:
+                    query = query | (Q(time_begin__gte=begin) & Q(time_end__lte=end) & Q(day=day))
+            rangetime_list = RangeTime.objects.filter(query)           
+            for rangetime in rangetime_list:
+                ids.append(rangetime.post.id)
+        except Exception as ex:
+            print("Error get post common range time id ", ex)
         return ids
-
-    @staticmethod
-    def get_common_range_time_filter(all_posts, commonrangetimes):
-        if commonrangetimes == []:
-            return all_posts
-        else:
-            ids = Post.get_post_common_range_time_id(commonrangetimes)
-            all_posts = all_posts.filter(id__in=ids).distinct()
-            return all_posts
-
-    @staticmethod
-    def get_address_filter(all_posts, address):
-        if address == '':
-            return all_posts
-        else:
-            print(address)
-            all_posts = all_posts.filter(address__contains=address)
-            return all_posts
 
     @staticmethod
     def get_registered_posts(user_id):
@@ -144,7 +125,7 @@ class RangeTime(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
                              blank=True, null=True, related_name='range_time_user')
 
-    day = models.CharField(max_length=10, choices=DAY_CHOICE)
+    day = models.IntegerField(max_length=10, choices=DAY_CHOICE)
     time_begin = models.TimeField()
     time_end = models.TimeField()
 
