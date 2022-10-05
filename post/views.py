@@ -12,14 +12,17 @@ def get_posts(request):
     errors = None
     data = None
     try:
-        postSerializers = PostSerializers(instance=None, data=request.data)
+        json_input = request.data
+        json_input["customer_id"] = request.user.id
+        postSerializers = PostSerializers(instance=None, data=json_input)
         querySet = postSerializers.get_posts_filter(request.data)
         serializers = PostSerializers(querySet, many=True)
         message = "Successfully"
         status_code = status.HTTP_200_OK
         data = serializers.data
+        # log here, log use_id - t_call_api, func_name
     except Exception as ex:
-        print("log here ", ex)
+        print("log error here ", ex)
     res_dict = {
         "message": message,
         "errors": errors,

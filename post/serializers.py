@@ -91,7 +91,6 @@ class PostSerializers(serializers.ModelSerializer):
                     time_begin = datetime.datetime.strptime(f"27/10/2000 {time_begin}", "%d/%m/%Y %H:%M:%S").time()
                     time_end = datetime.datetime.strptime(f"27/10/2000 {time_end}", "%d/%m/%Y %H:%M:%S").time()
 
-
                     if day not in DAY:
                         raise serializers.ValidationError(
                             'teaching day invalid / ngày dạy không hợp lệ', status.STATUS_CODE['invalid_data'])
@@ -117,38 +116,48 @@ class PostSerializers(serializers.ModelSerializer):
                 {'error': 'must be as teacher / phải có quyền giáo viên'}, status.STATUS_CODE['unauthorized'])
         return data
 
+    def custom_validate(self, data):
+        fee = data.get("fee", {})
+        range_times = data.get('range_times', [])
+        if len(fee) > 0:
+            fee = self.validate_fee(fee)
+        if len(range_times) > 0:
+            range_times = self.validate_range_time(range_times)
+
     def get_posts_filter(self, data):
-        keyword = data.get("keyword", "") # title, subjects, address, author_name
+        self.custom_validate(data)
+
+        keyword = data.get("keyword", "")  # title, subjects, address, author_name
         range_times = data.get('range_times', [])
         fee = data.get("fee", {})
         from_fee = fee.get("from_fee")
         to_fee = fee.get("to_fee")
         common_range_times = data.get('common_range_times', [])
-        
+
         # filter
         query = ""
         is_add = False
         if not is_null_or_empty(keyword):
-            query = Q(title__contains = keyword) | Q(subjects__name__contains = keyword) | Q(address__contains = keyword) | Q(author__first_name = keyword) | Q(author__last_name = keyword)
-            is_add = True 
-        
-        if not is_null_or_empty_params(from_fee, to_fee):
-            sub_query = Q(fee__gte = from_fee) & Q(fee__lte = to_fee)
-            if is_add:
-                query = query & sub_query
-            else:
-                query = sub_query
-        
-        if len(range_times) != 0:
-            range_times = self.validate_range_time(range_times)
-            rangetimes_id = Post.get_post_range_time_id(range_times)
+            keyword = keyword.lower()
+            query = Q(title__contains=keyword) | Q(subjects__name__contains=keyword) | Q(address__contains=keyword) | Q(
+                author__first_name=keyword) | Q(author__last_name=keyword)
+            is_add = True
 
-            sub_query = Q(id__in = rangetimes_id)
+        if not is_null_or_empty_params(from_fee, to_fee):
+            sub_query = Q(fee__gte=from_fee) & Q(fee__lte=to_fee)
             if is_add:
                 query = query & sub_query
             else:
                 query = sub_query
-        
+
+        if len(range_times) != 0:
+            rangetimes_id = Post.get_post_range_time_id(range_times)
+            sub_query = Q(id__in=rangetimes_id)
+            if is_add:
+                query = query & sub_query
+            else:
+                query = sub_query
+
         if len(common_range_times) != 0:
             pass
 

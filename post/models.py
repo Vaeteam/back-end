@@ -31,7 +31,8 @@ class Post(models.Model):
     address = models.CharField(max_length=150)
     fee = models.PositiveIntegerField()  # get >= 0 -> 2147483647
     duration = models.PositiveIntegerField(default=0)  # field time : minute
-    date_posted = models.DateTimeField(default=timezone.now)
+    t_create = models.DateTimeField(null=True)
+    date_posted = models.DateTimeField(null=True) # default = timezone.now
     note = models.TextField(null=True, blank=True)
     state = models.CharField(max_length=100, choices=STATE)
 
@@ -45,17 +46,6 @@ class Post(models.Model):
             BTreeIndex(fields=['title', ]),
             BTreeIndex(fields=['fee', ]),
         ]
-
-    @staticmethod
-    def get_subject_filter(subjects, all_posts):
-        '''
-            subjects is list subjects = ['hóa', 'Địa']
-        '''
-        if subjects == []:
-            return all_posts
-        else:
-            subject_filter = Q(subjects__name__in=subjects)
-            return all_posts.filter(subject_filter).distinct()
 
     @staticmethod
     def get_post_range_time_id(rangetimes):
@@ -81,33 +71,6 @@ class Post(models.Model):
 
 
     @staticmethod
-    def get_post_common_range_time_id(common_range_times):
-        ids = []
-        try:
-            query = ""
-            flag = True 
-            for i, common_range_time in enumerate(common_range_times):
-                day = common_range_time.get("day")
-                session = common_range_time.get("session", "").lower()
-
-                if session == 'sáng':
-                    begin = datetime.datetime.strptime('6:50', '%H:%M').time()
-                    end = datetime.datetime.strptime('11:59', '%H:%M').time()
-                elif session == "chiều":
-                    begin = datetime.datetime.strptime('12:01', '%H:%M').time()
-                    end = datetime.datetime.strptime('23:59', '%H:%M').time()
-                if i == 0:
-                    query = (Q(time_begin__gte=begin) & Q(time_end__lte=end) & Q(day=day)) 
-                else:
-                    query = query | (Q(time_begin__gte=begin) & Q(time_end__lte=end) & Q(day=day))
-            rangetime_list = RangeTime.objects.filter(query)           
-            for rangetime in rangetime_list:
-                ids.append(rangetime.post.id)
-        except Exception as ex:
-            print("Error get post common range time id ", ex)
-        return ids
-
-    @staticmethod
     def get_registered_posts(user_id):
         try:
             all_posts = Post.objects.filter(teachers=user_id)
@@ -124,8 +87,8 @@ class RangeTime(models.Model):
                              blank=True, null=True, related_name='range_time')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
                              blank=True, null=True, related_name='range_time_user')
-
-    day = models.IntegerField(max_length=10, choices=DAY_CHOICE)
+    t_create = models.DateTimeField(default=timezone.now)
+    day = models.IntegerField(choices=DAY_CHOICE)
     time_begin = models.TimeField()
     time_end = models.TimeField()
 
@@ -139,5 +102,5 @@ class PostReview(models.Model):
     comment = models.TextField()
     score = models.DecimalField(
         max_digits=4, decimal_places=1, null=True, blank=True)  # such as: 90.2, 100.0
-    time = models.DateTimeField()
+    t_create = models.DateTimeField(default=timezone.now)
     is_edited = models.BooleanField(default=False)

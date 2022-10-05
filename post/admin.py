@@ -10,7 +10,7 @@ from .models import Post, PostReview, RangeTime, Subject
 class PostDisplay(admin.ModelAdmin):
     list_display = (
         'id', 'title', 'author', 'content', 'address', 'fee', 'duration', 'note', 'state',
-        'active', 'date_posted', 'approve_user',)
+        'active', 't_create', 'date_posted', 'approve_user',)
     search_fields = ('id', 'title', 'author', 'content', 'address', 'fee', 'duration', 'note', 'state',
                      'active', 'date_posted', 'approve_user',)
 
@@ -18,14 +18,14 @@ class PostDisplay(admin.ModelAdmin):
 @admin.register(PostReview)
 class PostReviewDisplay(admin.ModelAdmin):
     list_display = (
-        'id', 'post', 'comment', 'score', 'time', 'is_edited',)
-    search_fields = ('id', 'post', 'comment', 'score', 'time', 'is_edited',)
+        'id', 'post', 'comment', 'score', 't_create', 'is_edited',)
+    search_fields = ('id', 'post', 'comment', 'score', 't_create', 'is_edited',)
 
 
 @admin.register(RangeTime)
 class RangeTimeDisplay(admin.ModelAdmin):
     list_display = (
-        'id', 'post', 'user', 'day', 'time_begin', 'time_end',)
+        'id', 'post', 'user', 'day', 'time_begin', 'time_end', 't_create')
     search_fields = ('id', 'post', 'user', 'day', 'time_begin', 'time_end')
 
 
