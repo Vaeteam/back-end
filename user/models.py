@@ -37,7 +37,6 @@ class CustomUserManager(UserManager):
 
         return self._create_user(email, password, **extra_fields)
 
-
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
@@ -73,3 +72,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         token = jwt.encode({'id': self.id, 'type': 'refresh_token', 'first_name': self.first_name, 'email': self.email,
                             'exp': datetime.utcnow() + timedelta(days=27)}, settings.SECRET_KEY, algorithm='HS256')
         return token
+
+
+class Certificate(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="certificate")
+    cert_name = models.CharField(max_length=100)
+    cert_url = models.CharField(max_length=100)
