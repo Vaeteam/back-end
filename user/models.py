@@ -7,8 +7,6 @@ from datetime import datetime, timedelta
 from django.contrib.auth.models import UserManager
 from django.utils import timezone
 import jwt
-import random
-import string
 
 
 class CustomUserManager(UserManager):
@@ -63,14 +61,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def fullname(self):
         return self.last_name + self.first_name
 
-    @staticmethod
-    def gen_random_email():
-        return  "RANDOM_"  + "".join(random.choices(string.ascii_uppercase + string.digits, k=20)) + "@gmail.com"
-
     @property
     def access_token(self):
         token = jwt.encode({'id': self.id, 'type': 'access_token', 'first_name': self.first_name, 'email': self.email,
-                            'exp': datetime.utcnow() + timedelta(days=7)}, settings.SECRET_KEY, algorithm='HS256')
+                            'exp': datetime.utcnow() + timedelta(days=1)}, settings.SECRET_KEY, algorithm='HS256')
         return token
 
     @property
