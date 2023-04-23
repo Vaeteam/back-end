@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-e5ygvq%oy78bjepyl&*e%!+l+hr!b)=69+ow&fv6bpre@q+@7)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [".vercel.app"]
+ALLOWED_HOSTS = [".vercel.app", "127.0.0.1"]
 
 
 # Application definition
@@ -156,3 +156,10 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'vantien.me27@gmail.com'
 EMAIL_HOST_PASSWORD = 'qholfxafipxxudmp'
+
+# Default password
+DEFAULT_PASSWORD = "DEFAULT_dftcn7Fe756VatFwk47w_Weteach"
+
+# Google oauth2
+GOOGLE_CLIENT_ID = "768260902602-cftd21ksr2hpoghcgpma9mr32217m9ek.apps.googleusercontent.com"
+GOOGLE_SECRET_ID = "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"
