@@ -30,4 +30,5 @@ urlpatterns = [
     path(r'^email/account/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',  check_password_reset, name= "check_password_reset"),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('social_auth/', include('social_auth.urls'))
 ]
