@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-e5ygvq%oy78bjepyl&*e%!+l+hr!b)=69+ow&fv6bpre@q+@7)
 DEBUG = True
 
 ALLOWED_HOSTS = [".vercel.app", "127.0.0.1"]
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
@@ -42,11 +43,13 @@ INSTALLED_APPS = [
     "user",
     "post",
     'drf_spectacular',
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

@@ -28,6 +28,11 @@ class SignupSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['first_name', 'last_name', 'email', 'password', 'confirm_password']
 
+    def to_representation(self, instance):
+        try:
+            return super().to_representation(instance)
+        except Exception as e:
+            return {'error': str(e)}
 
     def validate(self, data):
         password = data['password']
@@ -59,7 +64,6 @@ class SignupSerializer(serializers.ModelSerializer):
         new_user.is_active = False
         new_user.save()
 
-
         # Cần tách thread ra để gọi 1 thread riêng
         send_email_account_confirm(new_user, email)
         return new_user
@@ -69,11 +73,11 @@ class ResetPassSerializer(serializers.Serializer):
     email = serializers.CharField(
         style={'input_type': 'email'}, write_only=True)
 
+
     def reset_password(self, validated_data):
         email = validated_data['email']
         user = self.context.get("user")
 
-        print("im in here: ", user, email)
         # Cần tách thread ra để gọi 1 thread riêng
         send_email_password_reset(user)
 
