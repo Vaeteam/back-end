@@ -6,8 +6,10 @@ from django.conf import settings
 
 
 def register_social_google_user(email="", first_name="", last_name=""):
+    # Todo check user with email input exist or not
+    # If exist return access and refresh token, if no create account first then return token
     try:
-        # check user has email is exist
+        # Todo if exist email in db
         user = CustomUser.objects.get(email=email)
         if user.auth_google == False:
             user.is_active  = True
@@ -20,7 +22,8 @@ def register_social_google_user(email="", first_name="", last_name=""):
         }
        
     except:
-        # check user has email is not exist
+        # If email not in db
+        # Todo create new user with default password
         new_user = CustomUser.objects.create_user(first_name=first_name, last_name=last_name, email=email, password= settings.DEFAULT_PASSWORD)
         new_user.is_active  = True
         new_user.auth_google = True
