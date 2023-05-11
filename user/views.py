@@ -13,16 +13,16 @@ def activate(request, uidb64, token):
 
     status_code = status.STATUS_CODE["invalid_data"]
     message = status.MESSAGE["invalid_data"]
-    errors = True
+    errors = None
     data = None
 
     try:
         check_email_account_confirmation_token(uidb64, token)
         message = "Kích hoạt tài khoản thành công"
-        errors = False
         status_code = status.STATUS_CODE['success']
     except Exception as ex:
         print("Error {}: {} ".format(func_name, ex))
+        errors = ex
         status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         message = "Internal server error"
     res_dict = {
@@ -38,7 +38,7 @@ def check_password_reset(request, uidb64, token):
 
     status_code = status.STATUS_CODE["invalid_data"]
     message = status.MESSAGE["invalid_data"]
-    errors = True
+    errors = None
     data = None
     password = request.data.get('password', None)
     try:
@@ -49,10 +49,10 @@ def check_password_reset(request, uidb64, token):
         else:
             check_email_reset_password_token(uidb64, token, password)
             message = "Đặt lại mật khẩu thành công"
-            errors = False
 
     except Exception as ex:
         print("Error {}: {} ".format(func_name, ex))
+        errors = ex
         status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         message = "Internal server error"
     res_dict = {
@@ -68,7 +68,7 @@ def sign_up(request):
 
     status_code = status.STATUS_CODE["invalid_data"]
     message = status.MESSAGE["invalid_data"]
-    errors = True
+    errors = None
     data = None
     try:
         json_input = request.data
@@ -77,12 +77,12 @@ def sign_up(request):
         if serializer.is_valid():
             serializer.save()
             message = "Thành công"
-            errors = False
             status_code = status.STATUS_CODE['success']
         else:
             data = serializer.errors
     except Exception as ex:
         print("Error {}: {} ".format(func_name, ex))
+        errors = ex
         status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         message = "Internal server error"
     res_dict = {
@@ -98,7 +98,7 @@ def reset_password(request):
 
     status_code = status.STATUS_CODE["invalid_data"]
     message = status.MESSAGE["invalid_data"]
-    errors = True
+    errors = None
     data = None
     try:
         json_input = request.data
@@ -116,11 +116,11 @@ def reset_password(request):
             if serializer.is_valid():
                 serializer.reset_password(json_input)
                 message = "Thành công"
-                errors = False
                 status_code = status.STATUS_CODE['success']
             else:
                 data = serializer.errors
     except Exception as ex:
+        errors = ex
         status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         message = "Internal server error"
         print("Error {}: {} ".format(func_name, ex))
@@ -139,7 +139,7 @@ def login(request):
 
     status_code = status.STATUS_CODE["invalid_data"]
     message = status.MESSAGE["invalid_data"]
-    errors = True
+    errors = None
     data = None
     
     try:
@@ -150,16 +150,16 @@ def login(request):
         if user:
             serializer = LoginSerializer(user)
             message = "Thành công"
-            errors = False
             status_code = status.STATUS_CODE['success']
             data = serializer.data
         else:
             status_code = status.STATUS_CODE["invalid_data"]
             message = status.MESSAGE["invalid_data"]
             data = {
-                "email": "tên đăng nhập hoặc mật khẩu không đúng"
+                "data": "tên đăng nhập hoặc mật khẩu không đúng"
             }
     except Exception as ex:
+        errors = ex
         status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         message = "Internal server error"
         print("Error {}: {} ".format(func_name, ex))
