@@ -11,7 +11,6 @@ from constant import status
 def activate(request, uidb64, token):
     func_name = "activate"
 
-    status_code = status.STATUS_CODE["invalid_data"]
     message = status.MESSAGE["invalid_data"]
     errors = True
     data = None
@@ -20,23 +19,20 @@ def activate(request, uidb64, token):
         check_email_account_confirmation_token(uidb64, token)
         message = "Kích hoạt tài khoản thành công"
         errors = False
-        status_code = status.STATUS_CODE['success']
     except Exception as ex:
         print("Error {}: {} ".format(func_name, ex))
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         message = "Internal server error"
     res_dict = {
         "message": message,
         "errors": errors,
         "data": data
     }
-    return Response(res_dict, status=status_code)
+    return Response(res_dict)
 
 @api_view(['POST'])
 def check_password_reset(request, uidb64, token):
     func_name = "check_password_reset"
 
-    status_code = status.STATUS_CODE["invalid_data"]
     message = status.MESSAGE["invalid_data"]
     errors = True
     data = None
@@ -53,20 +49,18 @@ def check_password_reset(request, uidb64, token):
 
     except Exception as ex:
         print("Error {}: {} ".format(func_name, ex))
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         message = "Internal server error"
     res_dict = {
         "message": message,
         "errors": errors,
         "data": data
     }
-    return Response(res_dict, status=status_code)
+    return Response(res_dict)
 
 @api_view(['POST'])
 def sign_up(request):
     func_name = "sign_up"
 
-    status_code = status.STATUS_CODE["invalid_data"]
     message = status.MESSAGE["invalid_data"]
     errors = True
     data = None
@@ -78,25 +72,22 @@ def sign_up(request):
             serializer.save()
             message = "Thành công"
             errors = False
-            status_code = status.STATUS_CODE['success']
         else:
             data = serializer.errors
     except Exception as ex:
         print("Error {}: {} ".format(func_name, ex))
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         message = "Internal server error"
     res_dict = {
         "message": message,
         "errors": errors,
         "data": data
     }
-    return Response(res_dict, status=status_code)
+    return Response(res_dict)
 
 @api_view(['POST'])
 def reset_password(request):
     func_name = "reset_password"
 
-    status_code = status.STATUS_CODE["invalid_data"]
     message = status.MESSAGE["invalid_data"]
     errors = True
     data = None
@@ -105,7 +96,6 @@ def reset_password(request):
         email = request.data.get('email', None)
         user = CustomUser.objects.filter(email=email)
         if not bool(user):
-            status_code = status.STATUS_CODE["invalid_data"]
             message = status.MESSAGE["invalid_data"]
             data = {
                 "email": "email chưa được đăng ký"
@@ -121,7 +111,6 @@ def reset_password(request):
             else:
                 data = serializer.errors
     except Exception as ex:
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         message = "Internal server error"
         print("Error {}: {} ".format(func_name, ex))
 
@@ -131,7 +120,7 @@ def reset_password(request):
         "data": data
     }
 
-    return Response(res_dict, status=status_code)
+    return Response(res_dict)
 
 @api_view(['POST'])
 def login(request):
@@ -154,13 +143,11 @@ def login(request):
             status_code = status.STATUS_CODE['success']
             data = serializer.data
         else:
-            status_code = status.STATUS_CODE["invalid_data"]
             message = status.MESSAGE["invalid_data"]
             data = {
                 "email": "tên đăng nhập hoặc mật khẩu không đúng"
             }
     except Exception as ex:
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         message = "Internal server error"
         print("Error {}: {} ".format(func_name, ex))
 
@@ -170,4 +157,4 @@ def login(request):
         "data": data
     }
 
-    return Response(res_dict, status=status_code)
+    return Response(res_dict)
