@@ -166,3 +166,9 @@ DEFAULT_PASSWORD = "DEFAULT_dftcn7Fe756VatFwk47w_Weteach"
 # Google oauth2
 GOOGLE_CLIENT_ID = "768260902602-cftd21ksr2hpoghcgpma9mr32217m9ek.apps.googleusercontent.com"
 GOOGLE_SECRET_ID = "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"
+
+# Facebook oauth2
+FACEBOOK_CLIENT_ID = "941220900526368"
+FACEBOOK_SECRET_ID = "f30a15a3d30f7983d14afd4f92fdf173"
+
+FRONTEND_URL = "http://localhost:8080/"

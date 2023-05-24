@@ -49,6 +49,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=150, null=True, blank=True)
 
     auth_google = models.BooleanField(default=False)
+    auth_facebook = models.BooleanField(default=False)
+    facebook_id = models.CharField(max_length=200, blank=True, null=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
