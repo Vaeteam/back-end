@@ -1,67 +1,37 @@
-from constant.choice import DAY_CHOICE, STATE, TIME, COMMON
-from django.conf import settings
+from constant.choice import STATE
 from django.db import models
-from django.urls import reverse
 from django.utils import timezone
 from user.models import CustomUser
-from django.db.models import Q, indexes
-from django.contrib.postgres.indexes import BTreeIndex, HashIndex
-import datetime
-
-
-class Subject(models.Model):
-    name = models.CharField(max_length=100, blank=True)
-    parent_subject = models.ForeignKey(
-        "self", on_delete=models.CASCADE, null=True, blank=True)  # call itself
-    owner = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, null=True, blank=True)
-
-    def __str__(self):
-        return self.name
+from common.models import Subject, RangeTime
 
 
 class PostDetail(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
-    address = models.CharField(max_length=150)
-    fee = models.PositiveIntegerField()  # get >= 0 -> 2147483647
+    teaching_address = models.CharField(max_length=150)
+    fee = models.PositiveIntegerField()
     note = models.TextField(null=True, blank=True)
-    duration = models.PositiveIntegerField(default=0)  # field time : minute
-    state = models.CharField(max_length=100, choices=STATE)
+    duration = models.PositiveIntegerField(default=0)
+
 
 class Post(models.Model):
     post_detail = models.OneToOneField(PostDetail, on_delete=models.CASCADE)
-    teachers = models.ManyToManyField(
-        CustomUser, blank=True, related_name="teachers")
+    teachers = models.ManyToManyField(CustomUser, blank=True, related_name="teachers")
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     subjects = models.ManyToManyField(Subject)
+    range_times = models.ManyToManyField(RangeTime)
+    approve_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name="approve_user")
 
-    t_create = models.DateTimeField(null=True)
-    date_posted = models.DateTimeField(null=True) # default = timezone.now
-
+    updated_date = models.DateTimeField(null=True)
+    created_date = models.DateTimeField(default=timezone.now) # default = timezone.now
     active = models.BooleanField(default=True)
-    approve_user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name="approve_user")
+    state = models.CharField(max_length=100, choices=STATE, default=STATE[0][0])
 
     class Meta:
         ordering = ('-id',)
 
     def __str__(self):
         return f"author {self.author.id} - post id {self.id}"
-
-
-class RangeTime(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE,
-                             blank=True, null=True, related_name='range_time')
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
-                             blank=True, null=True, related_name='range_time_user')
-    t_create = models.DateTimeField(default=timezone.now)
-    day = models.IntegerField(choices=DAY_CHOICE)
-    t_begin = models.TimeField()
-    t_end = models.TimeField()
-
-    def __str__(self):
-        return f"day: {self.day}, begin_time:{self.time_begin}, end_time: {self.time_end}"
 
 
 class PostReview(models.Model):
