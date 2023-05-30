@@ -14,9 +14,9 @@ class Subject(models.Model):
 
 class RangeTime(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
-    available_day = models.IntegerField(choices=DAY_CHOICE)
+    available_day = models.CharField(choices=DAY_CHOICE, max_length=50)
     start_time = models.TimeField()
     end_time = models.TimeField()
 
     def __str__(self):
-        return f"day: {self.day}, begin_time:{self.time_begin}, end_time: {self.time_end}"
+        return f"day: {self.available_day}, begin_time:{self.start_time}, end_time: {self.end_time}"

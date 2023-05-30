@@ -11,7 +11,7 @@ class PostDetail(models.Model):
     teaching_address = models.CharField(max_length=150)
     fee = models.PositiveIntegerField()
     note = models.TextField(null=True, blank=True)
-    duration = models.PositiveIntegerField(default=0)
+    duration = models.CharField(max_length=50)
 
 
 class Post(models.Model):

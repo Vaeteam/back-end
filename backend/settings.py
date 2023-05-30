@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-e5ygvq%oy78bjepyl&*e%!+l+hr!b)=69+ow&fv6bpre@q+@7)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [".vercel.app", "127.0.0.1"]
+ALLOWED_HOSTS = [".vercel.app", "127.0.0.1", "localhost"]
 CORS_ALLOW_ALL_ORIGINS = True
 
 
@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     "user",
     "post",
     'drf_spectacular',
-    "corsheaders"
+    "corsheaders",
+    "common"
 ]
 
 MIDDLEWARE = [
@@ -81,23 +82,23 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'neondb',
-        'USER': 'tranVyTDT',
-        'PASSWORD': '0zPpUkXVef2N',
-        'HOST': 'ep-white-wave-189695.ap-southeast-1.aws.neon.tech',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'neondb',
+#         'USER': 'tranVyTDT',
+#         'PASSWORD': '0zPpUkXVef2N',
+#         'HOST': 'ep-white-wave-189695.ap-southeast-1.aws.neon.tech',
+#         'PORT': '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

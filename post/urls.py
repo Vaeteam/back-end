@@ -1,6 +1,6 @@
 from django.urls import path, include
-from .views import create_post
+from .views import create
 
 urlpatterns = [
-    path('create_post/', create_post, name="create_post")
+    path('create/', create, name="create")
 ]
