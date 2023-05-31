@@ -6,6 +6,7 @@ from django.db import models
 from datetime import datetime, timedelta
 from django.contrib.auth.models import UserManager
 from django.utils import timezone
+from common.models import RangeTime
 import jwt
 import random
 import string
@@ -54,6 +55,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
+
+    range_times = models.ManyToManyField(RangeTime)
 
     USERNAME_FIELD = 'email'
 

@@ -1,2 +1,6 @@
 from django.urls import path, include
-from .views import get_posts
+from .views import create
+
+urlpatterns = [
+    path('create/', create, name="create")
+]
