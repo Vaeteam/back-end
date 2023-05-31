@@ -33,6 +33,7 @@ def register_social_google_user(email="", first_name="", last_name=""):
 
 
 def register_social_facebook_user(email="", first_name="", last_name="", facebook_id=""):
+    user = ""
     try:
         # Todo check user has facebook id exist or not
         user = CustomUser.objects.get(facebook_id=facebook_id)
@@ -49,21 +50,22 @@ def register_social_facebook_user(email="", first_name="", last_name="", faceboo
             email = CustomUser.gen_random_email()
         else:
             user = CustomUser.objects.filter(email=email).first()
-            if bool(user):
-                # Facebook account has email already exist in db
-                user.auth_facebook = True
-                user.facebook_id = facebook_id
-                user.save()
-                return {
-                    'access_token': user.access_token,
-                    'refresh_token': user.refresh_token
-                }
-            else:
-                new_user = CustomUser.objects.create_user(first_name=first_name, last_name=last_name, email=email, password=settings.DEFAULT_PASSWORD)
-                new_user.auth_facebook = True
-                new_user.facebook_id = facebook_id
-                new_user.save()
-                return  {
-                    'access_token': new_user.access_token,
-                    'refresh_token': new_user.refresh_token
-                }
+
+        if bool(user):
+            # Facebook account has email already exist in db
+            user.auth_facebook = True
+            user.facebook_id = facebook_id
+            user.save()
+            return {
+                'access_token': user.access_token,
+                'refresh_token': user.refresh_token
+            }
+        else:
+            new_user = CustomUser.objects.create_user(first_name=first_name, last_name=last_name, email=email, password=settings.DEFAULT_PASSWORD)
+            new_user.auth_facebook = True
+            new_user.facebook_id = facebook_id
+            new_user.save()
+            return  {
+                'access_token': new_user.access_token,
+                'refresh_token': new_user.refresh_token
+            }
