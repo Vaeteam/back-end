@@ -12,17 +12,18 @@ class Facebook:
         """
         validate method Queries the facebook GraphAPI to fetch the user info
         """
+        func_name = "facebook_validate"
         try:
             access_token = Facebook.exchange_code_for_token(auth_token)
             profile = Facebook.get_user_info(access_token)
             return profile
-        except:
-            return "The token is invalid or expired."
+        except Exception as e:
+            print("Error in {}: {}".format(func_name, e))
 
     @staticmethod
     def exchange_code_for_token(code):
-        func_name = "exchange_code_for_token"
-        token_url = 'https://graph.facebook.com/v12.0/oauth/access_token'
+        func_name = "facebook_exchange_code_for_token"
+        api_url = 'https://graph.facebook.com/v12.0/oauth/access_token'
         params = {
             'client_id': settings.FACEBOOK_CLIENT_ID,
             'client_secret': settings.FACEBOOK_SECRET_ID,
@@ -34,14 +35,18 @@ class Facebook:
             response = requests.get(token_url, params=params)
             # log response here
             print(response, response.json(), params)
-            access_token = response.json().get('access_token')
+            if response.status_code == 200:
+                token_data = response.json()
+                access_token = token_data['access_token']
+            else:
+                print('Facebook token exchange failed with status code:', response.status_code)
         except Exception as e:
             print("Error in {}: {}".format(func_name, e))
         return access_token
 
     @staticmethod
     def get_user_info(access_token):
-        func_name = "get_user_info"
+        func_name = "facebook_get_user_info"
         api_url = 'https://graph.facebook.com/v12.0/me'
         params = {
             'access_token': access_token,
@@ -49,10 +54,14 @@ class Facebook:
         }
         user_data = dict()
         try:
-            response = requests.get(api_url, params=params)
-            # log response here
-            print(response, response.json(), params)
-            user_data = response.json()
+            if bool(access_token):
+                response = requests.get(api_url, params=params)
+                # log response here
+                print(response, response.json(), params)
+                if response.status_code == 200:
+                    user_data = response.json()
+                else:
+                    print('Facebook get user info fail with status code:', response.status_code)
         except Exception as e:
             print("Error in {}: {}".format(func_name, e))
         return user_data
