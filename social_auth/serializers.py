@@ -31,13 +31,18 @@ class FacebookSocialAuthSerializer(serializers.Serializer):
     def validate_auth_token(self, auth_token):
         func_name = "facebook_validate_auth_token"
         try:
+            print("111111111111111")
             user_data = facebook.Facebook.validate(auth_token)
+            print("111111111111111 ", user_data)
             if bool(user_data):
+                print("111111111111111")
                 email = user_data.get('email')
                 name = user_data.get('name')
                 facebook_id = user_data.get('id')
+                print("1111111111111113 ",)
                 return register_social_facebook_user(email=email, first_name=name, facebook_id=facebook_id)
 
+            print("1111111111111112")
         except Exception as e:
             print("Error in {}: {}".format(func_name, e))
 

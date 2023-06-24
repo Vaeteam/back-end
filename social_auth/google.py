@@ -1,5 +1,8 @@
-from google.auth.transport import requests
+import requests
+import json
 from google.oauth2 import id_token
+from backend import settings
+
 
 
 class Google:
@@ -31,16 +34,18 @@ class Google:
         }
         access_token = ""
         try:
-            response = requests.get(token_url, params=params)
+            # log input before call
+            print("call in func {}, {}, {}".format(func_name, api_url, json.dumps(params)))
+            response = requests.post(api_url, params=params)
             # log response here
-            print(response, response.json(), params)
+            print("resonpse in func {}, {}".format(func_name, response.json()))
             if response.status_code == 200:
                 token_data = response.json()
                 access_token = token_data['access_token']
             else:
                 print('Google token exchange failed with status code:', response.status_code)
         except Exception as e:
-            print("Error in {}: {}".format(func_name, e))
+            print("Error in func {}: {}".format(func_name, e))
         return access_token
 
     @staticmethod
@@ -53,11 +58,13 @@ class Google:
         user_info = {}
         try:
             if bool(access_token):
+                print("call in func {}, {}, {}".format(func_name, api_url, json.dumps(params)))
                 response = requests.get(api_url, headers=headers)
+                print("resonpse in func {}, {}".format(func_name, response.json()))
                 if response.status_code == 200:
                     user_info = response.json()
                 else:
                     print('Google get user info fail with status code:', response.status_code)
         except Exception as e:
-            print("Error in {}: {}".format(func_name, e))
+            print("Error in func {}: {}".format(func_name, e))
         return user_info

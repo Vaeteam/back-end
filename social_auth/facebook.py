@@ -1,4 +1,6 @@
 import requests
+import json
+import traceback
 from backend import settings
 
 
@@ -32,16 +34,18 @@ class Facebook:
         }
         access_token = ""
         try:
-            response = requests.get(token_url, params=params)
+            # log input before call
+            print("call in func {}, {}, {}".format(func_name, api_url, json.dumps(params)))
+            response = requests.get(api_url, params=params)
             # log response here
-            print(response, response.json(), params)
+            print("resonpse in func {}, {}".format(func_name, response.json()))
             if response.status_code == 200:
                 token_data = response.json()
                 access_token = token_data['access_token']
             else:
                 print('Facebook token exchange failed with status code:', response.status_code)
         except Exception as e:
-            print("Error in {}: {}".format(func_name, e))
+            print("Error in func {}: {}".format(func_name, e))
         return access_token
 
     @staticmethod
@@ -55,13 +59,15 @@ class Facebook:
         user_data = dict()
         try:
             if bool(access_token):
+                # log input before call
+                print("call in func {}, {}, {}".format(func_name, api_url, json.dumps(params)))
                 response = requests.get(api_url, params=params)
                 # log response here
-                print(response, response.json(), params)
+                print("resonpse in func {}, {}".format(func_name, response.json()))
                 if response.status_code == 200:
                     user_data = response.json()
                 else:
                     print('Facebook get user info fail with status code:', response.status_code)
         except Exception as e:
-            print("Error in {}: {}".format(func_name, e))
+            print("Error in func {}: {}, {}".format(func_name, e, traceback.print_exc()))
         return user_data
