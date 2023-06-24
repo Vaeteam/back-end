@@ -69,5 +69,5 @@ class Facebook:
                 else:
                     print('Facebook get user info fail with status code:', response.status_code)
         except Exception as e:
-            print("Error in func {}: {}, {}".format(func_name, e, traceback.print_exc()))
+            print("Error in func {}: {}".format(func_name, e)))
         return user_data
