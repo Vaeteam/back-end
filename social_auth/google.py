@@ -52,12 +52,11 @@ class Google:
     def get_user_info(access_token):
         func_name = "google_get_user_info"
         api_url = 'https://www.googleapis.com/oauth2/v2/userinfo'
-        headers = { 'Authorization': f'Bearer {access_token}'
-        }
+        headers = {'Authorization': f'Bearer {access_token}'}
         user_info = {}
         try:
             if bool(access_token):
-                print("call in func {}, {}, {}".format(func_name, api_url))
+                print("call in func {}, {}".format(func_name, api_url))
                 response = requests.get(api_url, headers=headers)
                 print("resonpse in func {}, {}".format(func_name, response.json()))
                 if response.status_code == 200:
