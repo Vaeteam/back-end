@@ -29,7 +29,7 @@ class Facebook:
         params = {
             'client_id': settings.FACEBOOK_CLIENT_ID,
             'client_secret': settings.FACEBOOK_SECRET_ID,
-            'redirect_uri': settings.FRONTEND_URL,
+            'redirect_uri': settings.FACEBOOK_FRONTEND_URL,
             'code': code
         }
         access_token = ""
@@ -69,5 +69,5 @@ class Facebook:
                 else:
                     print('Facebook get user info fail with status code:', response.status_code)
         except Exception as e:
-            print("Error in func {}: {}".format(func_name, e)))
+            print("Error in func {}: {}".format(func_name, e))
         return user_data

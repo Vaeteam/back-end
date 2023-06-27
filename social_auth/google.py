@@ -26,9 +26,9 @@ class Google:
         func_name = "google_exchange_code_for_token"
         api_url = 'https://oauth2.googleapis.com/token'
         params = {
-            'client_id': settings.FACEBOOK_CLIENT_ID,
-            'client_secret': settings.FACEBOOK_SECRET_ID,
-            'redirect_uri': settings.FRONTEND_URL,
+            'client_id': settings.GOOGLE_CLIENT_ID,
+            'client_secret': settings.GOOGLE_SECRET_ID,
+            'redirect_uri': settings.GOOGLE_FRONTEND_URL,
             'code': code,
             'grant_type': 'authorization_code'
         }
@@ -38,7 +38,7 @@ class Google:
             print("call in func {}, {}, {}".format(func_name, api_url, json.dumps(params)))
             response = requests.post(api_url, params=params)
             # log response here
-            print("resonpse in func {}, {}".format(func_name, response.json()))
+            print("response in func {}, {}".format(func_name, response.json()))
             if response.status_code == 200:
                 token_data = response.json()
                 access_token = token_data['access_token']
@@ -52,13 +52,12 @@ class Google:
     def get_user_info(access_token):
         func_name = "google_get_user_info"
         api_url = 'https://www.googleapis.com/oauth2/v2/userinfo'
-        headers = {
-            'Authorization': f'Bearer {access_token}'
+        headers = { 'Authorization': f'Bearer {access_token}'
         }
         user_info = {}
         try:
             if bool(access_token):
-                print("call in func {}, {}, {}".format(func_name, api_url, json.dumps(params)))
+                print("call in func {}, {}, {}".format(func_name, api_url))
                 response = requests.get(api_url, headers=headers)
                 print("resonpse in func {}, {}".format(func_name, response.json()))
                 if response.status_code == 200:

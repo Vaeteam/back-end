@@ -82,23 +82,23 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'neondb',
-#         'USER': 'tranVyTDT',
-#         'PASSWORD': '0zPpUkXVef2N',
-#         'HOST': 'ep-white-wave-189695.ap-southeast-1.aws.neon.tech',
-#         'PORT': '5432',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'neondb',
+        'USER': 'tranVyTDT',
+        'PASSWORD': '0zPpUkXVef2N',
+        'HOST': 'ep-white-wave-189695.ap-southeast-1.aws.neon.tech',
+        'PORT': '5432',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -167,9 +167,10 @@ DEFAULT_PASSWORD = "DEFAULT_dftcn7Fe756VatFwk47w_Weteach"
 # Google oauth2
 GOOGLE_CLIENT_ID = "768260902602-cftd21ksr2hpoghcgpma9mr32217m9ek.apps.googleusercontent.com"
 GOOGLE_SECRET_ID = "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"
+GOOGLE_FRONTEND_URL = "http://localhost:5173"
 
 # Facebook oauth2
 FACEBOOK_CLIENT_ID = "941220900526368"
 FACEBOOK_SECRET_ID = "f30a15a3d30f7983d14afd4f92fdf173"
+FACEBOOK_FRONTEND_URL = "http://localhost:5173/auth/login"
 
-FRONTEND_URL = "http://localhost:5173/auth/login"
