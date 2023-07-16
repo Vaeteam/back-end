@@ -21,7 +21,7 @@ def register_social_google_user(email="", first_name="", last_name=""):
             'refresh_token': user.refresh_token
         }
        
-    except:
+    except CustomUser.DoesNotExist:
         # Todo create new user with default password
         new_user = CustomUser.objects.create_user(first_name=first_name, last_name=last_name, email=email, password=settings.DEFAULT_PASSWORD)
         new_user.auth_google = True
@@ -30,6 +30,8 @@ def register_social_google_user(email="", first_name="", last_name=""):
             'access_token': new_user.access_token,
             'refresh_token': new_user.refresh_token
         }
+    except Exception as e:
+        print(f"register_social_google_user {str(e)}")
 
 
 def register_social_facebook_user(email="", first_name="", last_name="", facebook_id=""):

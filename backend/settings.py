@@ -28,14 +28,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-e5ygvq%oy78bjepyl&*e%!+l+hr!b)=69+ow&fv6bpre@q+@7)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG")
 
 ALLOWED_HOSTS = [".vercel.app", "127.0.0.1", "localhost", "api.weteach.vn"]
 CORS_ALLOW_ALL_ORIGINS = True
 
 # LOAD .ENV ENVIRONMENT
-USE_PRODUCTION = os.environ.get("USE_PRODUCTION")
-if int(USE_PRODUCTION) == 1:
+if DEBUG == 'true':
     # use for prodution env
 
     # frontend url
