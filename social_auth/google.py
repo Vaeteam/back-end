@@ -1,10 +1,10 @@
+import logging
 import requests
 import json
-from google.oauth2 import id_token
 from backend import settings
 
 
-
+logger = logging.getLogger(__name__)
 class Google:
     """Google class to fetch the user info and return it"""
 
@@ -19,7 +19,7 @@ class Google:
             profile = Google.get_user_info(access_token)
             return profile
         except Exception as e:
-            print("Error in {}: {}".format(func_name, e))
+            logger.error("Error in {}: {}".format(func_name, e))
 
     @staticmethod
     def exchange_code_for_token(code):
@@ -35,17 +35,17 @@ class Google:
         access_token = ""
         try:
             # log input before call
-            print("call in func {}, {}, {}".format(func_name, api_url, json.dumps(params)))
+            logger.info("call in func {}, {}, {}".format(func_name, api_url, json.dumps(params)))
             response = requests.post(api_url, params=params)
             # log response here
-            print("response in func {}, {}".format(func_name, response.json()))
+            logger.info("response in func {}, {}".format(func_name, response.json()))
             if response.status_code == 200:
                 token_data = response.json()
                 access_token = token_data['access_token']
             else:
-                print('Google token exchange failed with status code:', response.status_code)
+                logger.info('Google token exchange failed with status code:', response.status_code)
         except Exception as e:
-            print("Error in func {}: {}".format(func_name, e))
+            logger.error("Error in func {}: {}".format(func_name, e))
         return access_token
 
     @staticmethod
@@ -56,13 +56,13 @@ class Google:
         user_info = {}
         try:
             if bool(access_token):
-                print("call in func {}, {}".format(func_name, api_url))
+                logger.info("call in func {}, {}".format(func_name, api_url))
                 response = requests.get(api_url, headers=headers)
-                print("resonpse in func {}, {}".format(func_name, response.json()))
+                logger.info("resonpse in func {}, {}".format(func_name, response.json()))
                 if response.status_code == 200:
                     user_info = response.json()
                 else:
-                    print('Google get user info fail with status code:', response.status_code)
+                    logger.info('Google get user info fail with status code:', response.status_code)
         except Exception as e:
-            print("Error in func {}: {}".format(func_name, e))
+            logger.error("Error in func {}: {}".format(func_name, e))
         return user_info
