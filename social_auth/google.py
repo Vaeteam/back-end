@@ -50,19 +50,15 @@ class Google:
 
     @staticmethod
     def get_user_info(access_token):
-        func_name = "google_get_user_info"
         api_url = 'https://www.googleapis.com/oauth2/v2/userinfo'
         headers = {'Authorization': f'Bearer {access_token}'}
-        user_info = {}
+        
         try:
-            if bool(access_token):
-                logger.info("call in func {}, {}".format(func_name, api_url))
-                response = requests.get(api_url, headers=headers)
-                logger.info("resonpse in func {}, {}".format(func_name, response.json()))
-                if response.status_code == 200:
-                    user_info = response.json()
-                else:
-                    logger.info(f'Google get user info fail with status code: {response.status_code} {str(response.json())}')
+            logger.info(f"CALL API GG USER DATA:{api_url} {headers}")
+            response = requests.get(api_url, headers=headers)
+            logger.info(f"GET USER DATA RESPONSE: status code {response.status_code} data {str(response.json())}")
+            if response.status_code == 200:
+                return response.json()
+        
         except Exception as e:
-            logger.error("Error in func {}: {}".format(func_name, e))
-        return user_info
+            logger.error(F"GET USER DATA ERROR: {str(e)}")
