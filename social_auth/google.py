@@ -43,7 +43,7 @@ class Google:
                 token_data = response.json()
                 access_token = token_data['access_token']
             else:
-                logger.info('Google token exchange failed with status code:', response.status_code)
+                logger.info(f'Google token exchange failed with status code: {response.status_code} {str(response)}')
         except Exception as e:
             logger.error("Error in func {}: {}".format(func_name, e))
         return access_token
@@ -62,7 +62,7 @@ class Google:
                 if response.status_code == 200:
                     user_info = response.json()
                 else:
-                    logger.info('Google get user info fail with status code:', response.status_code)
+                    logger.info(f'Google get user info fail with status code: {response.status_code} {str(response)}')
         except Exception as e:
             logger.error("Error in func {}: {}".format(func_name, e))
         return user_info
