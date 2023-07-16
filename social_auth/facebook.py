@@ -1,7 +1,7 @@
 import requests
 import json
-import traceback
 from backend import settings
+from constant.common import Url
 
 
 class Facebook:
@@ -10,48 +10,52 @@ class Facebook:
     """
 
     @staticmethod
-    def validate(auth_token):
+    def validate(fb_access_token):
         """
         validate method Queries the facebook GraphAPI to fetch the user info
         """
         func_name = "facebook_validate"
+        profile = {}
         try:
-            access_token = Facebook.exchange_code_for_token(auth_token)
-            profile = Facebook.get_user_info(access_token)
-            return profile
+            is_valid = Facebook.check_valid_access_token(fb_access_token)
+            if is_valid:
+                profile = Facebook.get_user_info(fb_access_token)
         except Exception as e:
             print("Error in {}: {}".format(func_name, e))
+        return profile
 
     @staticmethod
-    def exchange_code_for_token(code):
-        func_name = "facebook_exchange_code_for_token"
-        api_url = 'https://graph.facebook.com/v12.0/oauth/access_token'
+    def check_valid_access_token(fb_access_token):
+        func_name = "check_valid_access_token"
         params = {
-            'client_id': settings.FACEBOOK_CLIENT_ID,
-            'client_secret': settings.FACEBOOK_SECRET_ID,
-            'redirect_uri': settings.FRONTEND_URL,
-            'code': code
+            'input_token': fb_access_token,
+            'access_token': "{}|{}".format(settings.FACEBOOK_CLIENT_ID, settings.FACEBOOK_SECRET_ID),
         }
-        access_token = ""
+
         try:
             # log input before call
-            print("call in func {}, {}, {}".format(func_name, api_url, json.dumps(params)))
-            response = requests.get(api_url, params=params)
+            print("call in func {}, {}, {}".format(func_name, Url.FACEBOOK_DEBUG_URL, json.dumps(params)))
+            response = requests.get(Url.FACEBOOK_DEBUG_URL, params=params)
             # log response here
-            print("resonpse in func {}, {}".format(func_name, response.json()))
-            if response.status_code == 200:
-                token_data = response.json()
-                access_token = token_data['access_token']
+            print("response in func {}, {}".format(func_name, response.json()))
+            data = response.json()
+            if 'error' in data:
+                print("Có lỗi trong quá trình kiểm tra fb access token {}".format(fb_access_token))
+            
             else:
-                print('Facebook token exchange failed with status code:', response.status_code)
+                app_id_matched = data.get('data', {}).get('app_id') == settings.FACEBOOK_CLIENT_ID
+                if data.get('data', {}).get('is_valid') and app_id_matched:
+                    # check token is ok 
+                    return True     
+                else:
+                    print("fb access token không thuộc về ứng dụng {}".format(fb_access_token))
         except Exception as e:
             print("Error in func {}: {}".format(func_name, e))
-        return access_token
+        return False
 
     @staticmethod
     def get_user_info(access_token):
         func_name = "facebook_get_user_info"
-        api_url = 'https://graph.facebook.com/v12.0/me'
         params = {
             'access_token': access_token,
             'fields': 'id,name,email'
@@ -60,10 +64,10 @@ class Facebook:
         try:
             if bool(access_token):
                 # log input before call
-                print("call in func {}, {}, {}".format(func_name, api_url, json.dumps(params)))
-                response = requests.get(api_url, params=params)
+                print("call in func {}, {}, {}".format(func_name, Url.FACEBOOK_INFO_URL, json.dumps(params)))
+                response = requests.get(Url.FACEBOOK_INFO_URL, params=params)
                 # log response here
-                print("resonpse in func {}, {}".format(func_name, response.json()))
+                print("response in func {}, {}".format(func_name, response.json()))
                 if response.status_code == 200:
                     user_data = response.json()
                 else:

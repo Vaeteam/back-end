@@ -21,7 +21,7 @@ def gen_email_confirmation_token(user, user_email):
 
 def send_email_account_confirm(user, user_email):
     try:
-        current_site = 'http://127.0.0.1:8000'
+        current_site = settings.FRONTEND_AUTH_URL
         mail_subject = 'Kích hoạt tài khoản Weteach'
         email_recepient = user_email
         msg_html = render_to_string('acc_active_email.html', {
@@ -75,7 +75,7 @@ def gen_password_reset_token(user):
 
 def send_email_password_reset(user):
     try:
-        current_site = 'http://127.0.0.1:8000'
+        current_site = settings.FRONTEND_AUTH_URL
         mail_subject = 'Reset your Weteach password.'
         email_recepient = user.email
         msg_html = render_to_string('acc_password_reset.html', {
