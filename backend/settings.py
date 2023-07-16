@@ -39,13 +39,12 @@ if int(USE_PRODUCTION) == 1:
     # use for prodution env
 
     # frontend url
-    FRONTEND_AUTH_URL = "https://weteach.vn/auth"
+    FRONTEND_URL = "https://weteach.vn"
 else:
     # use for dev, stag env
 
     # frontend url
-    FRONTEND_AUTH_URL = "http://localhost:5173/auth"
-
+    FRONTEND_URL = "http://localhost:5173"
 
 # Application definition
 AUTH_USER_MODEL = 'user.CustomUser'
@@ -185,8 +184,12 @@ DEFAULT_PASSWORD = os.environ.get("DEFAULT_PASSWORD")
 # Google oauth2
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
 GOOGLE_SECRET_ID = os.environ.get("GOOGLE_SECRET_ID")
+GOOGLE_FRONTEND_URL = FRONTEND_URL
 
 # Facebook oauth2
 FACEBOOK_CLIENT_ID = os.environ.get("FACEBOOK_CLIENT_ID")
 FACEBOOK_SECRET_ID = os.environ.get("FACEBOOK_SECRET_ID")
+
+# For auth with confirm email
+FRONTEND_AUTH_URL = FRONTEND_URL + "/auth"
 
