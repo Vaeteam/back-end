@@ -173,3 +173,5 @@ FACEBOOK_CLIENT_ID = "941220900526368"
 FACEBOOK_SECRET_ID = "f30a15a3d30f7983d14afd4f92fdf173"
 
 FRONTEND_URL = "http://localhost:5173/auth/login"
+# frontend url
+FRONTEND_AUTH_URL = "http://localhost:5173/auth"
