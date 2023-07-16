@@ -5,6 +5,7 @@ from .serializers import SignupSerializer, ResetPassSerializer, LoginSerializer
 from .models import CustomUser
 from .services import check_email_account_confirmation_token, send_email_password_reset, check_email_reset_password_token
 from constant import status
+from rest_framework import status as drf_status
 
 
 @api_view(('GET',))
@@ -49,12 +50,12 @@ def check_password_reset(request, uidb64, token):
         else:
             check_email_reset_password_token(uidb64, token, password)
             message = "Đặt lại mật khẩu thành công"
-            status_code = status.STATUS_CODE["success"]
+            status_code = drf_status.HTTP_200_OK
 
     except Exception as ex:
         print("Error {}: {} ".format(func_name, ex))
         errors = ex
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        status_code = drf_status.HTTP_500_INTERNAL_SERVER_ERROR
         message = "Internal server error"
     res_dict = {
         "message": message,
