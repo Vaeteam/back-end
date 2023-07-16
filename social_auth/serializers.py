@@ -26,12 +26,12 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
 
 
 class FacebookSocialAuthSerializer(serializers.Serializer):
-    auth_token = serializers.CharField()
+    fb_access_token = serializers.CharField()
 
-    def validate_auth_token(self, auth_token):
+    def validate_fb_access_token(self, fb_access_token):
         func_name = "facebook_validate_auth_token"
         try:
-            user_data = facebook.Facebook.validate(auth_token)
+            user_data = facebook.Facebook.validate(fb_access_token)
             if bool(user_data):
                 email = user_data.get('email')
                 name = user_data.get('name')

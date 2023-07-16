@@ -25,11 +25,11 @@ class FacebookSocialAuthView(GenericAPIView):
 
     def post(self, request):
         """
-        POST with "auth_token"
+        POST with "fb_access_token"
         Send an access token as from facebook to get user information
         """
 
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = ((serializer.validated_data)['auth_token'])
+        data = ((serializer.validated_data)['fb_access_token'])
         return Response(data, status=status.HTTP_200_OK)
