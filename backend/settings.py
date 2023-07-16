@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-e5ygvq%oy78bjepyl&*e%!+l+hr!b)=69+ow&fv6bpre@q+@7)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [".vercel.app", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = [".vercel.app", "127.0.0.1", "localhost", "api.weteach.vn"]
 CORS_ALLOW_ALL_ORIGINS = True
 
 
