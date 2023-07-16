@@ -1,7 +1,4 @@
-from django.contrib.auth import authenticate
 from  user.models import CustomUser
-import os
-from rest_framework.exceptions import AuthenticationFailed
 from django.conf import settings
 
 

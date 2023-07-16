@@ -35,10 +35,10 @@ class Google:
         access_token = ""
         try:
             # log input before call
-            logger.info("call in func {}, {}, {}".format(func_name, api_url, json.dumps(params)))
+            logger.info(f"CALL API: call GG authen api with {api_url}, {str(params)}")
             response = requests.post(api_url, params=params)
             # log response here
-            logger.info("response in func {}, {}".format(func_name, response.json()))
+            logger.info(f"API RESPONSE: GG api response with value {str(response)}")
             if response.status_code == 200:
                 token_data = response.json()
                 access_token = token_data['access_token']

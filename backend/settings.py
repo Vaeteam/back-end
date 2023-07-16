@@ -33,18 +33,6 @@ DEBUG = os.environ.get("DEBUG")
 ALLOWED_HOSTS = [".vercel.app", "127.0.0.1", "localhost", "api.weteach.vn"]
 CORS_ALLOW_ALL_ORIGINS = True
 
-# LOAD .ENV ENVIRONMENT
-if DEBUG == 'true':
-    # use for prodution env
-
-    # frontend url
-    FRONTEND_URL = "https://weteach.vn"
-else:
-    # use for dev, stag env
-
-    # frontend url
-    FRONTEND_URL = "http://localhost:5173"
-
 # Application definition
 AUTH_USER_MODEL = 'user.CustomUser'
 
@@ -182,6 +170,18 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS
 }
+
+# LOAD .ENV ENVIRONMENT
+if DEBUG == 'true':
+    # use for prodution env
+
+    # frontend url
+    FRONTEND_URL = "https://weteach.vn"
+else:
+    # use for dev, stag env
+
+    # frontend url
+    FRONTEND_URL = "http://localhost:5173"
 
 #DataFlair
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
