@@ -38,12 +38,12 @@ class Google:
             logger.info(f"CALL API: call GG authen api with {api_url}, {str(params)}")
             response = requests.post(api_url, params=params)
             # log response here
-            logger.info(f"API RESPONSE: GG api response with value {str(response)}")
+            logger.info(f"API RESPONSE: GG api response with value {str(response.json())}")
             if response.status_code == 200:
                 token_data = response.json()
                 access_token = token_data['access_token']
             else:
-                logger.info(f'Google token exchange failed with status code: {response.status_code} {str(response)}')
+                logger.info(f'Google token exchange failed with status code: {response.status_code} {str(response.json())}')
         except Exception as e:
             logger.error("Error in func {}: {}".format(func_name, e))
         return access_token
@@ -62,7 +62,7 @@ class Google:
                 if response.status_code == 200:
                     user_info = response.json()
                 else:
-                    logger.info(f'Google get user info fail with status code: {response.status_code} {str(response)}')
+                    logger.info(f'Google get user info fail with status code: {response.status_code} {str(response.json())}')
         except Exception as e:
             logger.error("Error in func {}: {}".format(func_name, e))
         return user_info
