@@ -28,7 +28,7 @@ class Google:
         params = {
             'client_id': settings.GOOGLE_CLIENT_ID,
             'client_secret': settings.GOOGLE_SECRET_ID,
-            'redirect_uri': settings.GOOGLE_FRONTEND_URL,
+            'redirect_uri': settings.FRONTEND_AUTH_URL,
             'code': code,
             'grant_type': 'authorization_code'
         }
