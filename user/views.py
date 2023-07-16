@@ -49,6 +49,7 @@ def check_password_reset(request, uidb64, token):
         else:
             check_email_reset_password_token(uidb64, token, password)
             message = "Đặt lại mật khẩu thành công"
+            status_code = status.STATUS_CODE["success"]
 
     except Exception as ex:
         print("Error {}: {} ".format(func_name, ex))
