@@ -34,9 +34,7 @@ ALLOWED_HOSTS = [".vercel.app", "127.0.0.1", "localhost", "api.weteach.vn"]
 CORS_ALLOW_ALL_ORIGINS = True
 
 # LOAD .ENV ENVIRONMENT
-print("IM HEEEEEEEEEEEEEEE")
 USE_PRODUCTION = os.environ.get("USE_PRODUCTION")
-print("IM HEEEEEEEEEEEEEEE with ", USE_PRODUCTION)
 if int(USE_PRODUCTION) == 1:
     # use for prodution env
 
