@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +32,21 @@ DEBUG = True
 
 ALLOWED_HOSTS = [".vercel.app", "127.0.0.1", "localhost", "api.weteach.vn"]
 CORS_ALLOW_ALL_ORIGINS = True
+
+# LOAD .ENV ENVIRONMENT
+print("IM HEEEEEEEEEEEEEEE")
+USE_PRODUCTION = os.environ.get("USE_PRODUCTION")
+print("IM HEEEEEEEEEEEEEEE with ", USE_PRODUCTION)
+if int(USE_PRODUCTION) == 1:
+    # use for prodution env
+
+    # frontend url
+    FRONTEND_AUTH_URL = "https://weteach.vn/auth"
+else:
+    # use for dev, stag env
+
+    # frontend url
+    FRONTEND_AUTH_URL = "http://localhost:5173/auth"
 
 
 # Application definition
@@ -158,21 +178,17 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'vantien.me27@gmail.com'
-EMAIL_HOST_PASSWORD = 'qholfxafipxxudmp'
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 # Default password
-DEFAULT_PASSWORD = "DEFAULT_dftcn7Fe756VatFwk47w_Weteach"
+DEFAULT_PASSWORD = os.environ.get("DEFAULT_PASSWORD")
 
 # Google oauth2
-GOOGLE_CLIENT_ID = "768260902602-cftd21ksr2hpoghcgpma9mr32217m9ek.apps.googleusercontent.com"
-GOOGLE_SECRET_ID = "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"
-GOOGLE_FRONTEND_URL = "http://localhost:5173"
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+GOOGLE_SECRET_ID = os.environ.get("GOOGLE_SECRET_ID")
 
 # Facebook oauth2
-FACEBOOK_CLIENT_ID = "941220900526368"
-FACEBOOK_SECRET_ID = "f30a15a3d30f7983d14afd4f92fdf173"
-FACEBOOK_FRONTEND_URL = "http://localhost:5173/auth/login"
+FACEBOOK_CLIENT_ID = os.environ.get("FACEBOOK_CLIENT_ID")
+FACEBOOK_SECRET_ID = os.environ.get("FACEBOOK_SECRET_ID")
 
-# frontend url
-FRONTEND_AUTH_URL = "http://localhost:5173/auth"
