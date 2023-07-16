@@ -15,8 +15,8 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
             user_data = google.Google.validate(auth_token)
             logger.info(f'VALIDATE USER LOGGING: validate GG login get value {str(user_data)}')
             email = user_data['email']
-            first_name = user_data.get['given_name']
-            last_name = user_data.get["family_name"]
+            first_name = user_data['given_name']
+            last_name = user_data["family_name"]
             return register_social_google_user(email=email, first_name=first_name, last_name=last_name)
         except Exception as e:
             logger.error("Error in {}: {}".format(func_name, e))
