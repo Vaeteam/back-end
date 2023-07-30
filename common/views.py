@@ -8,7 +8,7 @@ from .serialiers import SubjectSerializer, RangeTimeSerializer
 @api_view(['GET'])
 def get_subjects(request):
     """Get all subjects."""
-    subjects = Subject.objects.all()
+    subjects = Subject.objects.filter(parent_subject__isnull=True)
     subject_serializer = SubjectSerializer(subjects, many=True)
     return Response(status=status.HTTP_200_OK, data=subject_serializer.data)
 
