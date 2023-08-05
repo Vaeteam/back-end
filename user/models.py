@@ -8,7 +8,6 @@ from django.contrib.auth.models import UserManager
 from django.utils import timezone
 from rest_framework.permissions import BasePermission
 from common.models import RangeTime, Subject
-from .services import *
 import jwt
 import random
 import string
@@ -101,14 +100,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_teacher(self):
-        # Todo common check
-        if is_null_or_empty_args(self.address):
-            return False
         # Todo check phone is validate or not
-        if not bool(self.is_validate_phone):
+        if not self.is_validate_phone:
             return False
         # Todo check account is active or not
-        if self.is_active != 1:
+        if not self.is_active:
             return False
         # Todo check user has the certificate or not
         certificates = self.certificate.all()

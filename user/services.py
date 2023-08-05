@@ -118,30 +118,3 @@ def check_email_reset_password_token(uidb64, token, password):
     user.save()
     return user
 
-def is_none(v):
-    if v is None:
-        return True
-    return False
-
-def is_empty(_str):
-    if isinstance(_str, str):
-        return is_none(_str) or len(_str.strip()) == 0
-    return False
-
-def is_null_or_empty(_str):
-    if is_none(_str):
-        return True
-    if isinstance(_str, str):
-        if is_empty(_str):
-            return True
-        if len(_str.strip()) > 0:
-            return _str.strip().isspace()
-        return True
-    return False
-
-def is_null_or_empty_args(*args):
-    for arg in args:
-        if is_null_or_empty(arg):
-            return True
-    return False
-
