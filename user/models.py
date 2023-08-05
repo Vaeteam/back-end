@@ -41,15 +41,6 @@ class CustomUserManager(UserManager):
 
         return self._create_user(email, password, **extra_fields)
 
-class IsTeacher(BasePermission):
-    def has_permission(self, request, view):
-        user_id = request.user_id
-        try:
-            user = CustomUser.objects.get(id=user_id)
-        except Exception as ex:
-            return False
-        return user.is_teacher
-
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30, blank=True)
@@ -106,19 +97,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         # Todo check account is active or not
         if not self.is_active:
             return False
-        # Todo check user has the certificate or not
-        certificates = self.certificate.all()
-        if not bool(certificates):
-            return False
         # Todo check user has the subject or not
         subjects = self.subjects.all()
         if not bool(subjects):
             return False
         return True
-
-    def get_authorization(self):
-        pass
-
 
 class Certificate(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="certificate")
