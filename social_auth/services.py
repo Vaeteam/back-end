@@ -15,7 +15,12 @@ def register_social_google_user(email="", first_name="", last_name=""):
         
         return {
             'access_token': user.access_token,
-            'refresh_token': user.refresh_token
+            'refresh_token': user.refresh_token,
+            'id': user.id,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'is_teacher': user.is_teacher
         }
        
     except CustomUser.DoesNotExist:
@@ -39,7 +44,12 @@ def register_social_facebook_user(email="", first_name="", last_name="", faceboo
 
         return {
             'access_token': user.access_token,
-            'refresh_token': user.refresh_token
+            'refresh_token': user.refresh_token,
+            'id': user.id,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'is_teacher': user.is_teacher
         }
 
     except:

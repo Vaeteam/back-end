@@ -8,7 +8,6 @@ from django.conf import settings
 from django.core.mail import EmailMessage, send_mail
 from datetime import datetime, timedelta
 from rest_framework import exceptions
-from .models import CustomUser
 import jwt
 
 
@@ -117,6 +116,5 @@ def check_email_reset_password_token(uidb64, token, password):
         user.is_active = True
         user.auth_google = True
     user.save()
-
     return user
 
