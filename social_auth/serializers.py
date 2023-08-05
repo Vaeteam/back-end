@@ -39,8 +39,9 @@ class FacebookSocialAuthSerializer(serializers.Serializer):
                 facebook_id = user_data.get('id')
                 return register_social_facebook_user(email=email, first_name=name, facebook_id=facebook_id)
         except Exception as e:
-            print("Error in {}: {}".format(func_name, e))
+            logger.error("Error in {}: {}".format(func_name, e))
 
         raise serializers.ValidationError(
             {'error':'The token is invalid or expired. Please login again.'}
         )
+

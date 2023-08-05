@@ -6,7 +6,9 @@ from django.db import models
 from datetime import datetime, timedelta
 from django.contrib.auth.models import UserManager
 from django.utils import timezone
-from common.models import RangeTime
+from rest_framework.permissions import BasePermission
+from common.models import RangeTime, Subject
+from .services import *
 import jwt
 import random
 import string
@@ -40,12 +42,23 @@ class CustomUserManager(UserManager):
 
         return self._create_user(email, password, **extra_fields)
 
+class IsTeacher(BasePermission):
+    def has_permission(self, request, view):
+        user_id = request.user_id
+        try:
+            user = CustomUser.objects.get(id=user_id)
+        except Exception as ex:
+            return False
+        return user.is_teacher
+
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
     email = models.EmailField(unique=True)
     sex = models.CharField(max_length=6, choices=SEX, blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True, unique=True)
+    is_validate_phone = models.BooleanField(default=False)
     description = models.TextField(blank=True, null=True)
     address = models.CharField(max_length=150, null=True, blank=True)
 
@@ -56,6 +69,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
 
+    subjects = models.ManyToManyField(Subject)
     range_times = models.ManyToManyField(RangeTime)
 
     USERNAME_FIELD = 'email'
@@ -64,7 +78,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-    
+
     @property
     def fullname(self):
         return self.last_name + self.first_name
@@ -75,18 +89,43 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     @property
     def access_token(self):
-        token = jwt.encode({'id': self.id, 'type': 'access_token', 'first_name': self.first_name, 'email': self.email,
-                            'exp': datetime.utcnow() + timedelta(days=7)}, settings.SECRET_KEY, algorithm='HS256')
+        token = jwt.encode({'id': self.id, 'type': 'access_token', 'first_name': self.first_name, 'last_name': self.last_name, 'email': self.email,
+                            'is_teacher': self.is_teacher, 'exp': datetime.utcnow() + timedelta(days=7)}, settings.SECRET_KEY, algorithm='HS256')
         return token
 
     @property
     def refresh_token(self):
-        token = jwt.encode({'id': self.id, 'type': 'refresh_token', 'first_name': self.first_name, 'email': self.email,
-                            'exp': datetime.utcnow() + timedelta(days=27)}, settings.SECRET_KEY, algorithm='HS256')
+        token = jwt.encode({'id': self.id, 'type': 'refresh_token', 'first_name': self.first_name, 'email': self.email, 'last_name': self.last_name,
+                            'is_teacher': self.is_teacher, 'exp': datetime.utcnow() + timedelta(days=27)}, settings.SECRET_KEY, algorithm='HS256')
         return token
+
+    @property
+    def is_teacher(self):
+        # Todo common check
+        if is_null_or_empty_args(self.address):
+            return False
+        # Todo check phone is validate or not
+        if not bool(self.is_validate_phone):
+            return False
+        # Todo check account is active or not
+        if self.is_active != 1:
+            return False
+        # Todo check user has the certificate or not
+        certificates = self.certificate.all()
+        if not bool(certificates):
+            return False
+        # Todo check user has the subject or not
+        subjects = self.subjects.all()
+        if not bool(subjects):
+            return False
+        return True
+
+    def get_authorization(self):
+        pass
 
 
 class Certificate(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="certificate")
     cert_name = models.CharField(max_length=100)
     cert_url = models.CharField(max_length=100)
+

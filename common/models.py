@@ -20,3 +20,4 @@ class RangeTime(models.Model):
 
     def __str__(self):
         return f"day: {self.available_day}, begin_time:{self.start_time}, end_time: {self.end_time}"
+
