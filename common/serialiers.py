@@ -1,3 +1,4 @@
+import datetime
 from rest_framework import serializers
 from .models import Subject, RangeTime
 
@@ -23,7 +24,19 @@ class SubjectSerializer(serializers.ModelSerializer):
         return subject
 
 
+def modify_time(time_string):
+    import datetime
+    time_object = datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%S.%fZ')
+    return time_object.time()
+
+
 class RangeTimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = RangeTime
         fields = '__all__'
+
+    def to_internal_value(self, data):
+        modified_data = data.copy()
+        modified_data['start_time'] = modify_time(data['start_time'])
+        modified_data['end_time'] = modify_time(data['end_time'])
+        return super().to_internal_value(modified_data)
