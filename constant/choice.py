@@ -1,6 +1,7 @@
 SEX = (
     ('male', "male"),
-    ('female', "female")
+    ('female', "female"),
+    ('any', "any"),
 )
 
 DAY_CHOICE = (

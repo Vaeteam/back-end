@@ -20,13 +20,12 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         if not validated_data:
-            print(self.errors)
             raise serializers.ValidationError("Data is not valid.")
         subjects_ids = validated_data.pop('subjects', [])
         range_times_data = validated_data.pop('range_times', [])
         post_detail = PostDetail.objects.create(**validated_data)
-        leaner = CustomUser.objects.get(id=1)
-        post = Post.objects.create(post_detail=post_detail, author=leaner)
+        learner = CustomUser.objects.get(id=1)
+        post = Post.objects.create(post_detail=post_detail, author=learner)
 
         subjects_to_add = Subject.objects.filter(pk__in=subjects_ids)
         post.subjects.add(*subjects_to_add)
@@ -36,3 +35,9 @@ class PostDetailSerializer(serializers.ModelSerializer):
             post.range_times.add(range_time)
 
         return post
+
+class PostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = '__all__'
