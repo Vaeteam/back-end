@@ -1,16 +1,17 @@
 SEX = (
     ('male', "male"),
-    ('female', "female")
+    ('female', "female"),
+    ('any', "any"),
 )
 
 DAY_CHOICE = (
-    ("mon", "Thứ 2"),  # thứ 2
-    ("tue", "Thứ 3"),  # thứ 3
-    ("wed", "Thứ 4"),  # thứ 4
-    ("thu", "Thứ 5"),  # thứ 5
-    ("fri", "Thứ 6"),  # thứ 6
-    ("sat", "Thứ 7"),  # thứ 7
-    ("sun", "Chủ Nhật")  # chủ nhật
+    ("Thứ Hai", "Thứ Hai"),  # thứ 2
+    ("Thứ Ba", "Thứ Ba"),  # thứ 3
+    ("Thứ Tư", "Thứ Tư"),  # thứ 4
+    ("Thứ Năm", "Thứ Năm"),  # thứ 5
+    ("Thứ Sáu", "Thứ Sáu"),  # thứ 6
+    ("Thứ Bảy", "Thứ Bảy"),  # thứ 7
+    ("Chủ Nhật", "Chủ Nhật")  # chủ nhật
 )
 
 DAY = [0, 1, 2, 3, 4, 5, 6]
@@ -37,3 +38,37 @@ TIME = (
     ("Ca khác", "Ca khác")
 )
 
+TEACHING_LOCATION = (
+    ("learner home", "Nhà người học"),
+    ("teacher home", "Nhà giáo viên"),
+    ("online", "Online"),
+    ("leaner home hibrid", "Nhà người học và online"),
+    ("teacher home hibrid", "Nhà giáo viên và online"),
+)
+
+TEACHING_TIME_UNIT = (
+    ("Tháng", "Tháng"),
+    ("Tuần", "Tuần"),
+    ("Buổi", "Buổi"),
+)
+
+EDUCATION = (
+    ('Tốt nghiệp lớp 12', 'Tốt nghiệp lớp 12'),
+    ('Sinh Viên', 'Sinh Viên'),
+    ('Cử Nhân/Kỹ Sư', 'Cử Nhân/Kỹ Sư'),
+    ('Học Viên Cao Học', 'Học Viên Cao Học'),
+    ('Thạc Sĩ', 'Thạc Sĩ'),
+    ('Nghiên cứu sinh', 'Nghiên cứu sinh'),
+    ('Tiến Sĩ', 'Tiến Sĩ'),
+    ('Phó Giáo Sư', 'Phó Giáo Sư'),
+    ('Giáo Sư', 'Giáo Sư')
+)
+
+YEAR_EXP = (
+    ('1 năm', '1 năm'),
+    ('2 năm', '2 năm'),
+    ('3 năm', '3 năm'),
+    ('4 năm', '4 năm'),
+    ('5 năm', '5 năm'),
+    ('Trên 5 năm', 'Trên 5 năm'),
+)

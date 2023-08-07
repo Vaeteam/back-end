@@ -2,41 +2,42 @@ from rest_framework import serializers
 from .models import Post, PostDetail
 from common.models import Subject, RangeTime
 from user.models import CustomUser
+from common.serialiers import RangeTimeSerializer
 
 
-class PostDetailSerializer(serializers.Serializer):
-    title = serializers.CharField(max_length=200, required=True)
-    content = serializers.CharField(required=True)
-    teaching_address = serializers.CharField(max_length=100, required=True)
-    fee = serializers.IntegerField(required=True)
-    note = serializers.CharField(required=False)
-    duration = serializers.CharField(max_length=100, required=True)
+class PostDetailSerializer(serializers.ModelSerializer):
+    range_times = RangeTimeSerializer(many=True)
+    subjects = serializers.ListField()
 
-
-class PostSerializer(serializers.Serializer):
-    post_detail = PostDetailSerializer()
-    user_id = serializers.IntegerField(required=True)
-    subject_ids = serializers.ListField(child=serializers.IntegerField(), required=True)
-    range_time_ids = serializers.ListField(child=serializers.IntegerField(), required=True)
+    class Meta:
+        model = PostDetail
+        fields = '__all__'
     
-    def create(self, validated_data):
-        validated_post_detail = validated_data.get("post_detail", {})
-        post_detail_data = {
-            "title": validated_post_detail.get("title"),
-            "content": validated_post_detail.get("content"),
-            "teaching_address": validated_post_detail.get("teaching_address"),
-            "fee": validated_post_detail.get("fee"),
-            "note": validated_post_detail.get("note"),
-            "duration": validated_post_detail.get("duration")
-        }
-        post_detail = PostDetail.objects.create(**post_detail_data)
-        author = CustomUser.objects.get(id=validated_data.get("user_id"))
-        subjects = (Subject.objects.get(id=subject_id) for subject_id in validated_data.get("subject_ids"))
-        range_times = (RangeTime.objects.get(id=range_time_id) for range_time_id in validated_data.get("range_time_ids"))
+    def to_internal_value(self, data):
+        modified_data = data.copy()
+        modified_data['range_times'] = data['shifts']
+        return super().to_internal_value(modified_data)
 
-        post = Post.objects.create(post_detail=post_detail, author=author)
-        post.subjects.set(subjects)
-        post.range_times.set(range_times)
+    def create(self, validated_data):
+        if not validated_data:
+            raise serializers.ValidationError("Data is not valid.")
+        subjects_ids = validated_data.pop('subjects', [])
+        range_times_data = validated_data.pop('range_times', [])
+        post_detail = PostDetail.objects.create(**validated_data)
+        learner = CustomUser.objects.get(id=1)
+        post = Post.objects.create(post_detail=post_detail, author=learner)
+
+        subjects_to_add = Subject.objects.filter(pk__in=subjects_ids)
+        post.subjects.add(*subjects_to_add)
+
+        for range_time_data in range_times_data:
+            range_time = RangeTime.objects.create(**range_time_data)
+            post.range_times.add(range_time)
 
         return post
 
+class PostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = '__all__'
