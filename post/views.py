@@ -26,5 +26,5 @@ def create(request):
             return Response(data=response_data, status=status.HTTP_201_CREATED)
         
     except Exception as e:
-        logger.info(f"Create Post failed with error {str(e)}")
+        logger.error(f"Create Post failed with error {str(e)}")
         return Response(data=str(e), status=status.HTTP_501_NOT_IMPLEMENTED)
