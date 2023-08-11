@@ -1,17 +1,20 @@
 import logging
 from any_case import converts_keys
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from .serializers import PostSerializer, PostDetailSerializer
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
 
 logger = logging.getLogger(__name__)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create(request):
     """ Create new Post """
     try:
+        user_info = request.user
         logger.info(f"Create Post with data {str(request.data)}")
         snake_case_request_data = converts_keys(request.data, case='snake')
         post_serializer = PostDetailSerializer(data=snake_case_request_data)
