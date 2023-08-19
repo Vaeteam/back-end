@@ -24,18 +24,26 @@ class PostDetail(models.Model):
     note = models.TextField(null=True, blank=True)
 
 
+class PostStatus(models.Model):
+    state = models.CharField(max_length=100, choices=STATE, default=STATE[0][0])
+    created_date = models.DateTimeField(default=timezone.now)
+    last_update_time = models.DateTimeField(null=True, blank=True)
+
+    selected_teacher = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+
+
 class Post(models.Model):
+    last_update_time = models.DateTimeField(null=True, blank=True)
+    created_date = models.DateTimeField(default=timezone.now)
+    active = models.BooleanField(default=True)
+
     post_detail = models.OneToOneField(PostDetail, on_delete=models.CASCADE)
     teachers = models.ManyToManyField(CustomUser, null=True, blank=True, related_name="teachers")
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     subjects = models.ManyToManyField(Subject)
     range_times = models.ManyToManyField(RangeTime)
     approve_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name="approve_user")
-
-    updated_date = models.DateTimeField(null=True, blank=True)
-    created_date = models.DateTimeField(default=timezone.now) # default = timezone.now
-    active = models.BooleanField(default=True)
-    state = models.CharField(max_length=100, choices=STATE, default=STATE[0][0])
+    status = models.OneToOneField(PostStatus, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('-id',)
@@ -52,18 +60,3 @@ class PostReview(models.Model):
         max_digits=4, decimal_places=1, null=True, blank=True)  # such as: 90.2, 100.0
     t_create = models.DateTimeField(default=timezone.now)
     is_edited = models.BooleanField(default=False)
-
-
-class RequestTeaching(models.Model):
-    learner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="request_learner")
-    teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="request_teacher")
-    post = models.ForeignKey(Post, on_delete=Post)
-    t_create = models.DateTimeField(default=timezone.now)
-
-
-class AppliedTeacher(models.Model):
-    teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=Post)
-    stage = models.CharField(max_length=100)
-    t_create = models.DateTimeField(default=timezone.now)
-
