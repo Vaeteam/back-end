@@ -18,8 +18,9 @@ DAY = [0, 1, 2, 3, 4, 5, 6]
 
 STATE = (
     ("created", "Tạo bài thành công"),
+    ("suspended", "Bài tuyển tạm ngưng"),
     ("verified", "Bài đã được duyệt"),
-    ("verified_failed", "Bài tuyển bị không hợp lệ"),
+    ("invalid", "Bài tuyển bị không hợp lệ"),
     ("edited", "Bài tuyển đã chỉnh sửa"),
     ("teacher_selected", "Đã chọn được giáo viên"),
     ("learner_request", "Học viên mời dạy"),
