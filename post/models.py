@@ -26,10 +26,11 @@ class PostDetail(models.Model):
 
 class PostStatus(models.Model):
     state = models.CharField(max_length=100, choices=STATE, default=STATE[0][0])
+    note = models.TextField(null=True, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
-    last_update_time = models.DateTimeField(null=True, blank=True)
 
-    selected_teacher = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    selected_teacher = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    post = models.ForeignKey("Post", on_delete=models.CASCADE)
 
 
 class Post(models.Model):
@@ -43,7 +44,6 @@ class Post(models.Model):
     subjects = models.ManyToManyField(Subject)
     range_times = models.ManyToManyField(RangeTime)
     approve_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name="approve_user")
-    status = models.OneToOneField(PostStatus, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('-id',)
