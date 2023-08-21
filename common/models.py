@@ -20,4 +20,3 @@ class RangeTime(models.Model):
 
     def __str__(self):
         return f"day: {self.weekday}, begin_time:{self.start_time}, end_time: {self.end_time}"
-
