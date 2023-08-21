@@ -27,7 +27,7 @@ class PostDetail(models.Model):
 class Post(models.Model):
     post_detail = models.OneToOneField(PostDetail, on_delete=models.CASCADE)
     teachers = models.ManyToManyField(CustomUser, null=True, blank=True, related_name="teachers")
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="post_management")
     subjects = models.ManyToManyField(Subject)
     range_times = models.ManyToManyField(RangeTime)
     approve_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name="approve_user")

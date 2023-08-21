@@ -6,5 +6,6 @@ from django.conf import settings
 urlpatterns = [
     path('signup/', views.sign_up),
     path('login/', views.login),
-    path('reset_pass/', views.reset_password)
+    path('reset_pass/', views.reset_password),
+    path('get_profile/<str:user_id>', views.get_profile)
 ]

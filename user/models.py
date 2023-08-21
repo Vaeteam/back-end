@@ -66,6 +66,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
+    @property
+    def get_common_fields(self):
+        return [
+            'is_active', 'first_name', 'last_name', 'email'
+        ]
+
     def __str__(self):
         return self.email
 
@@ -102,6 +108,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         if not bool(subjects):
             return False
         return True
+    
 
 class Certificate(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="certificate")
