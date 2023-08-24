@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Subject, RangeTime
+from .models import AdministrativeUnits, Subject, RangeTime
 from .serialiers import AdministrativeUnitsSerializer, SubjectSerializer, RangeTimeSerializer
 
 
@@ -22,7 +22,7 @@ def get_range_time(request):
 
 @api_view(['GET'])
 def get_administrative_unit(request, pk):
-    """Get all range times."""
-    administrative_units = RangeTime.objects.filter(pk=pk)
+    """Get Administrative Units. pk = 0 to get provices"""
+    administrative_units = AdministrativeUnits.objects.filter(root=pk) if pk else AdministrativeUnits.objects.filter(root=None)
     administrative_units_serializer = AdministrativeUnitsSerializer(administrative_units, many=True)
-    return Response(status=status.HTTP_200_OK, data=administrative_units_serializer.data) 
+    return Response(status=status.HTTP_200_OK, data=administrative_units_serializer.data)
