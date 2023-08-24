@@ -10,11 +10,11 @@ from rest_framework import status
 logger = logging.getLogger(__name__)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def create(request):
     """ Create new Post """
     try:
-        user_info = request.user
+        # user_info = request.user
         logger.info(f"Create Post with data {str(request.data)}")
         snake_case_request_data = converts_keys(request.data, case='snake')
         post_serializer = PostDetailSerializer(data=snake_case_request_data)

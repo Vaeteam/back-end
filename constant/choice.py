@@ -74,3 +74,5 @@ YEAR_EXP = (
     ('5 năm', '5 năm'),
     ('Trên 5 năm', 'Trên 5 năm'),
 )
+
+ADMINISTRATIVE_UNITS = (("province", "province"), ("district", "district"), ("ward", "ward"))
