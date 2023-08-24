@@ -1,6 +1,6 @@
 import datetime
 from rest_framework import serializers
-from .models import Subject, RangeTime
+from .models import AdministrativeUnits, Subject, RangeTime
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -38,4 +38,10 @@ class RangeTimeSerializer(serializers.ModelSerializer):
         data['start_time'] = modify_time(data['start_time'])
         data['end_time'] = modify_time(data['end_time'])
         return super().to_internal_value(data)
+
+
+class AdministrativeUnitsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdministrativeUnits
+        fields = '__all__'
     
