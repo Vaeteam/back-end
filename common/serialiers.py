@@ -43,5 +43,10 @@ class RangeTimeSerializer(serializers.ModelSerializer):
 class AdministrativeUnitsSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdministrativeUnits
-        fields = '__all__'
+        fields = "__all__"
+
+    def to_internal_value(self, data):
+        validated_data = super().to_internal_value(data)
+        isinstance(data.get("id"), int) and validated_data.update({"id": data.get("id")})
+        return validated_data
     
