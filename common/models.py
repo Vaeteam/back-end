@@ -26,5 +26,5 @@ class AdministrativeUnits(models.Model):
     name = models.CharField(max_length=50)
     codename = models.CharField(max_length=50)
     code = models.IntegerField()
-    division_type = models.CharField(choices=ADMINISTRATIVE_UNITS, max_length=50)
+    division_type = models.CharField(max_length=50)
     root = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)

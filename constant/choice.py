@@ -41,11 +41,11 @@ TIME = (
 )
 
 TEACHING_LOCATION = (
-    ("learner home", "Nhà người học"),
-    ("teacher home", "Nhà giáo viên"),
+    ("learner_home", "Nhà người học"),
+    ("teacher_home", "Nhà giáo viên"),
     ("online", "Online"),
-    ("leaner home hibrid", "Nhà người học và online"),
-    ("teacher home hibrid", "Nhà giáo viên và online"),
+    ("leaner_home_hibrid", "Nhà người học và online"),
+    ("teacher_home_hibrid", "Nhà giáo viên và online"),
 )
 
 TEACHING_TIME_UNIT = (

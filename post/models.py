@@ -2,7 +2,7 @@ from constant.choice import STATE, SEX, TEACHING_LOCATION, TEACHING_TIME_UNIT, E
 from django.db import models
 from django.utils import timezone
 from user.models import CustomUser
-from common.models import Subject, RangeTime
+from common.models import AdministrativeUnits, Subject, RangeTime
 
 
 class PostDetail(models.Model):
@@ -41,6 +41,9 @@ class Post(models.Model):
     post_detail = models.OneToOneField(PostDetail, on_delete=models.CASCADE)
     teachers = models.ManyToManyField(CustomUser, null=True, blank=True, related_name="teachers")
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    teaching_province = models.ForeignKey(AdministrativeUnits, null=True, blank=True, on_delete=models.CASCADE, related_name="teaching_province")
+    teaching_district = models.ForeignKey(AdministrativeUnits, null=True, blank=True, on_delete=models.CASCADE, related_name="teaching_district")
+    teaching_ward = models.ForeignKey(AdministrativeUnits, null=True, blank=True, on_delete=models.CASCADE, related_name="teaching_ward")
     subjects = models.ManyToManyField(Subject)
     range_times = models.ManyToManyField(RangeTime)
     approve_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name="approve_user")
