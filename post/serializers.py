@@ -16,6 +16,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data):
         modified_data = data.copy()
         modified_data['range_times'] = data['shifts']
+        modified_data['subjects'] = [key for key, checking_status in data['selected_subjects'].items()
+                                     if checking_status['checked']]
         return super().to_internal_value(modified_data)
 
     def create(self, validated_data):

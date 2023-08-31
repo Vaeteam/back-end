@@ -15,7 +15,7 @@ def create(request):
     """ Create new Post """
     try:
         user_info = request.user
-        logger.info(f"Creating Post with data {str(request.data)}")
+        logger.info(f"Create Post with data {str(request.data)}")
         snake_case_request_data = converts_keys(request.data, case='snake')
         post_serializer = PostDetailSerializer(data=snake_case_request_data)
 
