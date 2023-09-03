@@ -1,4 +1,4 @@
-from common.constant import RESPONSE_FORMAT
+from common.constants import RESPONSE_FORMAT
 
 
 def form_response(data=None, message=None, detail=None):

@@ -53,8 +53,20 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
         return post
 
+
 class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = "__all__"
+        depth = 2
+
+
+class ListPostRequestSerializer(serializers.Serializer):
+    page = serializers.IntegerField()
+    subject_ids = serializers.ListField(child=serializers.IntegerField(), required=False)
+    province_ids = serializers.ListField(child=serializers.IntegerField(), required=False)
+    district_ids = serializers.ListField(child=serializers.IntegerField(), required=False)
+    ward_ids = serializers.ListField(child=serializers.IntegerField(), required=False)
+    from_time = serializers.TimeField(required=False)
+    to_time = serializers.TimeField(required=False)
