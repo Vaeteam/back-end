@@ -209,3 +209,4 @@ FACEBOOK_SECRET_ID = os.environ.get("FACEBOOK_SECRET_ID")
 # For auth with confirm email
 FRONTEND_AUTH_URL = FRONTEND_URL + "/auth"
 
+PAGE_SIZE = 5
